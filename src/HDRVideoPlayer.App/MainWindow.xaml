@@ -1,0 +1,47 @@
+<Window
+    x:Class="HDRVideoPlayer.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="HDRVideoPlayer">
+
+    <Grid Padding="24" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <Button Content="Open video" Click="OpenVideo_Click"/>
+            <TextBlock Text="HDRVideoPlayer scaffold" VerticalAlignment="Center" FontSize="20"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnSpacing="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1.2*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" CornerRadius="8" Padding="16">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Playback surface placeholder" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="System playback and custom D3D11 rendering are intentionally not implemented yet." TextWrapping="Wrap"/>
+                    <TextBlock Text="Next milestone: system media preview with explicit playback-path diagnostics." TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" CornerRadius="8" Padding="16">
+                <ScrollViewer>
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Diagnostics" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="DiagnosticsText" Text="Open a local video file to generate a bounded scaffold diagnostic report." TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <TextBlock Grid.Row="2"
+                   Text="Boundary: no Dolby Vision certification claim, no DRM bypass, no bundled codec binaries."
+                   TextWrapping="Wrap"/>
+    </Grid>
+</Window>
