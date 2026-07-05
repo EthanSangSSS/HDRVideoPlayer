@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  core-tests:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore app
+        run: dotnet restore .\src\HDRVideoPlayer.App\HDRVideoPlayer.App.csproj
+      - name: Build app
+        run: dotnet build .\src\HDRVideoPlayer.App\HDRVideoPlayer.App.csproj -c Debug --no-restore
+      - name: Test core
+        run: dotnet test .\tests\HDRVideoPlayer.Core.Tests\HDRVideoPlayer.Core.Tests.csproj -c Debug --no-restore
+      - name: Public safety scan
+        shell: pwsh
+        run: .\scripts\public-safety-scan.ps1
