@@ -1,0 +1,45 @@
+using HDRVideoPlayer.Core.Media;
+
+namespace HDRVideoPlayer.Core.Diagnostics;
+
+public sealed record DiagnosticReport(
+    MediaAsset Asset,
+    DateTimeOffset GeneratedAt,
+    IReadOnlyList<string> Facts,
+    IReadOnlyList<string> Limitations,
+    IReadOnlyList<string> NextTests
+);
+
+public static class DiagnosticReportFactory
+{
+    public static DiagnosticReport Create(MediaAsset asset)
+    {
+        var facts = new List<string>
+        {
+            $"File: {asset.FileName}",
+            $"Container: {asset.Container}",
+            $"Playback path: {asset.PlaybackPath.Kind}",
+            $"Presentation path: {asset.PlaybackPath.Presentation}",
+            $"Dolby Vision markers detected: {asset.DolbyVision.MarkersDetected}"
+        };
+
+        var limitations = new List<string>
+        {
+            asset.HdrSignal.Limitation,
+            asset.DolbyVision.Limitation,
+            asset.PlaybackPath.Limitation
+        }
+        .Where(static item => !string.IsNullOrWhiteSpace(item))
+        .Distinct()
+        .ToArray();
+
+        var nextTests = new[]
+        {
+            "Add Media Foundation metadata probe.",
+            "Add system playback preview surface.",
+            "Add D3D11 scRGB test-pattern renderer before claiming custom HDR video presentation."
+        };
+
+        return new DiagnosticReport(asset, DateTimeOffset.UtcNow, facts, limitations, nextTests);
+    }
+}
