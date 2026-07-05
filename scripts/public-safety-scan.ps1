@@ -13,8 +13,19 @@ $hits = @()
 
 foreach ($pattern in $hardForbiddenPatterns) {
   foreach ($path in $paths) {
-    if (Test-Path $path) {
-      $matches = Select-String -Path $path -Pattern $pattern -Recurse -SimpleMatch -ErrorAction SilentlyContinue
+    if (-not (Test-Path -LiteralPath $path)) {
+      continue
+    }
+
+    $item = Get-Item -LiteralPath $path
+    $files = if ($item.PSIsContainer) {
+      Get-ChildItem -LiteralPath $item.FullName -Recurse -File -ErrorAction SilentlyContinue
+    } else {
+      @($item)
+    }
+
+    foreach ($file in $files) {
+      $matches = Select-String -LiteralPath $file.FullName -Pattern $pattern -SimpleMatch -ErrorAction SilentlyContinue
       foreach ($m in $matches) {
         $hits += "$($m.Path):$($m.LineNumber): $($m.Line)"
       }

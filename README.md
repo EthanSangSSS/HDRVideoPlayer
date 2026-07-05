@@ -67,7 +67,7 @@ This repository starts clean-room. Do not copy code from HDRImageViewer unless G
 
 - No DRM bypass.
 - No proprietary Dolby SDK redistribution.
-- No pirated sample media.
+- No unlicensed sample media.
 - No claim of Dolby Vision certification.
 - No claim of full Dolby Vision Profile 5 / 7 support.
 - No bundled FFmpeg, mpv, libplacebo, codec packs, or HEVC binaries in early public milestones.
