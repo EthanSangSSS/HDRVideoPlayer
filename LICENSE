@@ -1,0 +1,8 @@
+GPL-3.0-or-later
+
+This scaffold intentionally uses a GPL-compatible posture because the target architecture may reuse or adapt code from HDRImageViewer, which is GPLv3 or later.
+
+Before publishing a release, replace this placeholder with the full GPL-3.0-or-later license text from:
+https://www.gnu.org/licenses/gpl-3.0.txt
+
+If future work proves that no GPL code has been copied or adapted, the license can be re-evaluated in a dedicated licensing PR.
