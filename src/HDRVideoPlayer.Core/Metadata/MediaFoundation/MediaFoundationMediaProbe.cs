@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using HDRVideoPlayer.Core.Media;
 
 namespace HDRVideoPlayer.Core.Metadata.MediaFoundation;
@@ -41,6 +42,7 @@ public sealed class MediaFoundationMediaProbe : IMediaProbe
         }
     }
 
+    [SupportedOSPlatform("windows")]
     private static MediaAsset ProbeWithMediaFoundation(string filePath, MediaAsset fallbackAsset)
     {
         var comResult = MediaFoundationInterop.CoInitializeEx(IntPtr.Zero, MediaFoundationInterop.CoInitMultithreaded);
@@ -295,6 +297,7 @@ public sealed class MediaFoundationMediaProbe : IMediaProbe
         }
     }
 
+    [SupportedOSPlatform("windows")]
     private static void ReleaseComObject(object? value)
     {
         if (value is not null && Marshal.IsComObject(value))
