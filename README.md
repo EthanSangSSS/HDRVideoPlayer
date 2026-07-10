@@ -4,11 +4,11 @@ Windows-first HDR / Dolby Vision local video player lab built with WinUI 3, Dire
 
 ## Status
 
-Planning + buildable scaffold.
+Validated scaffold + Media Foundation metadata probe v1 diagnostics.
 
 This repository intentionally starts with:
 - a WinUI 3 shell;
-- a media metadata probe stub;
+- a Media Foundation metadata probe with a bounded extension fallback;
 - HDR / Dolby Vision domain models;
 - validation docs;
 - legal / codec boundaries;
@@ -60,11 +60,12 @@ This repository starts clean-room. Do not copy code from HDRImageViewer unless G
 - Provides a placeholder file-open flow.
 - Builds a `MediaAsset` model from the selected file path.
 - Classifies likely container type from extension.
-- Reports low-confidence Dolby Vision filename-marker candidates without parsing container or stream metadata.
+- Reads available codec, dimensions, frame rate, audio, color, and luminance attributes through Media Foundation on Windows.
+- Reports low-confidence Dolby Vision filename-marker candidates without claiming parsed Dolby Vision metadata.
 - Shows explicitly bounded HDR / Dolby Vision status.
 - Separates system playback, custom renderer, and unsupported states.
 
-Probe v0 is diagnostics scaffolding only. HDR, stream, mastering-display, and Dolby Vision metadata remain unknown until a real metadata extractor is implemented and tested.
+Probe v1 remains diagnostics-only. Missing Media Foundation attributes stay unknown, and mastering chromaticity coordinates plus Dolby Vision private metadata are not parsed.
 
 ## Non-goals
 

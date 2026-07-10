@@ -16,8 +16,9 @@
 |---|---|---|
 | Open MP4/MOV/MKV path | detect_only | file picker creates `MediaAsset` |
 | Container classification | detect_only | extension heuristic first |
-| HDR10 metadata | not_started | Media Foundation / parser probe |
-| HLG metadata | not_started | Media Foundation / parser probe |
+| Video/audio stream metadata | detect_only | Media Foundation media-type attributes on Windows |
+| HDR10 metadata | detect_only | PQ/BT.2020/luminance attributes when exposed by Media Foundation |
+| HLG metadata | detect_only | HLG/BT.2020 attributes when exposed by Media Foundation |
 | Dolby Vision filename-marker candidate detection | detect_only | filename marker only; no container parsing or dynamic metadata application |
 | System playback | not_started | `SystemMedia` path |
 | D3D11 scRGB renderer | not_started | static test pattern |
@@ -27,7 +28,7 @@
 | Profile 5 rendering | not_started | no early claim |
 | Profile 7 FEL/MEL rendering | not_started | no early claim |
 
-Probe v0 records extension and optional filename-marker evidence at heuristic confidence only. It does not parse container, stream, HDR, mastering-display, or Dolby Vision metadata.
+Probe v1 reads Media Foundation stream and media-type attributes on Windows, then falls back to v0 heuristics when unavailable. Missing attributes remain unknown. It does not parse mastering chromaticity coordinates, Dolby Vision private metadata, or dynamic metadata application.
 
 ## Evidence rule
 

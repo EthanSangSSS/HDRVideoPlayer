@@ -1,5 +1,6 @@
 using HDRVideoPlayer.Core.Diagnostics;
 using HDRVideoPlayer.Core.Metadata;
+using HDRVideoPlayer.Core.Metadata.MediaFoundation;
 using Microsoft.UI.Xaml;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -8,7 +9,7 @@ namespace HDRVideoPlayer.App;
 
 public sealed partial class MainWindow : Window
 {
-    private readonly IMediaProbe _probe = new ExtensionHeuristicMediaProbe();
+    private readonly IMediaProbe _probe = new MediaFoundationMediaProbe(new ExtensionHeuristicMediaProbe());
 
     public MainWindow()
     {
