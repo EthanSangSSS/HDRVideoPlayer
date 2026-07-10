@@ -8,6 +8,7 @@ public sealed record HdrSignal(
     int? MaxCll,
     int? MaxFall,
     string MasteringDisplayMetadata,
+    VideoRange Range,
     CapabilityState State,
     string Limitation
 )
@@ -20,6 +21,7 @@ public sealed record HdrSignal(
         null,
         null,
         "",
+        VideoRange.Unknown,
         CapabilityState.NotStarted,
         limitation);
 }
@@ -46,6 +48,13 @@ public enum MatrixCoefficients
     Bt709,
     Bt2020NonConstantLuminance,
     Bt2020ConstantLuminance
+}
+
+public enum VideoRange
+{
+    Unknown,
+    Limited,
+    Full
 }
 
 public enum CapabilityState

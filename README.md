@@ -60,8 +60,11 @@ This repository starts clean-room. Do not copy code from HDRImageViewer unless G
 - Provides a placeholder file-open flow.
 - Builds a `MediaAsset` model from the selected file path.
 - Classifies likely container type from extension.
+- Reports low-confidence Dolby Vision filename-marker candidates without parsing container or stream metadata.
 - Shows explicitly bounded HDR / Dolby Vision status.
 - Separates system playback, custom renderer, and unsupported states.
+
+Probe v0 is diagnostics scaffolding only. HDR, stream, mastering-display, and Dolby Vision metadata remain unknown until a real metadata extractor is implemented and tested.
 
 ## Non-goals
 

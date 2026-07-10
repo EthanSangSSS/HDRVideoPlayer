@@ -37,6 +37,12 @@ public sealed partial class MainWindow : Window
         var lines = new List<string> { "Facts:" };
         lines.AddRange(report.Facts.Select(static f => $"- {f}"));
         lines.Add("");
+        lines.Add("Inferred facts:");
+        lines.AddRange(report.InferredFacts.DefaultIfEmpty("none").Select(static f => $"- {f}"));
+        lines.Add("");
+        lines.Add("Unknowns:");
+        lines.AddRange(report.Unknowns.Select(static u => $"- {u}"));
+        lines.Add("");
         lines.Add("Limitations:");
         lines.AddRange(report.Limitations.Select(static l => $"- {l}"));
         lines.Add("");

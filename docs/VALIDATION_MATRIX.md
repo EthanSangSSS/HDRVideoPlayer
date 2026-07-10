@@ -18,7 +18,7 @@
 | Container classification | detect_only | extension heuristic first |
 | HDR10 metadata | not_started | Media Foundation / parser probe |
 | HLG metadata | not_started | Media Foundation / parser probe |
-| Dolby Vision marker detection | not_started | profile candidate panel |
+| Dolby Vision filename-marker candidate detection | detect_only | filename marker only; no container parsing or dynamic metadata application |
 | System playback | not_started | `SystemMedia` path |
 | D3D11 scRGB renderer | not_started | static test pattern |
 | P010/NV12 video frame path | not_started | custom frame rendering |
@@ -26,6 +26,8 @@
 | Profile 8.1 fallback | not_started | HDR10 base-layer fallback |
 | Profile 5 rendering | not_started | no early claim |
 | Profile 7 FEL/MEL rendering | not_started | no early claim |
+
+Probe v0 records extension and optional filename-marker evidence at heuristic confidence only. It does not parse container, stream, HDR, mastering-display, or Dolby Vision metadata.
 
 ## Evidence rule
 
