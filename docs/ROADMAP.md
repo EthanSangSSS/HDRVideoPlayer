@@ -2,7 +2,7 @@
 
 ## Milestone 0 — Public scaffold
 
-Status: current package.
+Status: complete.
 
 Exit criteria:
 
@@ -14,12 +14,16 @@ Exit criteria:
 
 ## Milestone 1 — Shell validation
 
+Status: complete.
+
 - WinUI app builds.
 - Core tests pass.
 - File picker works.
 - Diagnostic panel renders scaffold facts.
 
 ## Milestone 2 — Metadata probe v1
+
+Status: in progress. Media Foundation stream attributes are implemented; fixture validation and JSON export remain.
 
 - Replace extension heuristic with system metadata probe.
 - Add stream model population.
