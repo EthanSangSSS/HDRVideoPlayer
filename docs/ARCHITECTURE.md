@@ -24,8 +24,9 @@ FileOpenPicker
       -> tone map / gamut map
       -> FP16 scRGB swap chain
   -> Diagnostics
-      -> facts
-      -> limitations
+      -> metadata facts and limitations
+      -> system playback runtime state
+      -> presentation / rendering claim
       -> next tests
 ```
 
@@ -69,9 +70,15 @@ tests/HDRVideoPlayer.Core.Tests
 | ToneMappedFallback | HDR content mapped to SDR or display-limited output |
 | Unknown | Not yet determined |
 
-## First hard technical milestone
+## Diagnostic separation
 
-Before decoding video frames, implement a static HDR test-pattern renderer. This proves:
+- Metadata facts report only attributes read by the probe.
+- System playback state reports whether the Windows media stack opened or rejected the source.
+- Presentation remains `Unknown` until output behavior is independently measured; successful system playback is not an HDR or Dolby Vision rendering claim.
+
+## First custom-renderer milestone
+
+After the system-media preview is validated, implement a static HDR test-pattern renderer. This proves:
 
 - D3D device lifecycle;
 - swap-chain integration;

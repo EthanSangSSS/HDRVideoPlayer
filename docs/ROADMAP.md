@@ -31,6 +31,8 @@ Status: in progress. Media Foundation stream attributes are implemented; fixture
 
 ## Milestone 3 — System playback preview
 
+Status: in progress. The Windows system-media surface and runtime status are wired; local codec/container and presentation validation remain.
+
 - Add playback surface.
 - Use Windows system media path.
 - Label exact playback limitations.

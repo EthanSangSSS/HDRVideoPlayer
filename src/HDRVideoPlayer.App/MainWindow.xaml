@@ -13,7 +13,7 @@
 
         <StackPanel Orientation="Horizontal" Spacing="12">
             <Button Content="Open video" Click="OpenVideo_Click"/>
-            <TextBlock Text="HDRVideoPlayer scaffold" VerticalAlignment="Center" FontSize="20"/>
+            <TextBlock Text="HDRVideoPlayer" VerticalAlignment="Center" FontSize="20"/>
         </StackPanel>
 
         <Grid Grid.Row="1" ColumnSpacing="16">
@@ -23,18 +23,57 @@
             </Grid.ColumnDefinitions>
 
             <Border BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" CornerRadius="8" Padding="16">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="Playback surface placeholder" FontSize="18" FontWeight="SemiBold"/>
-                    <TextBlock Text="System playback and custom D3D11 rendering are intentionally not implemented yet." TextWrapping="Wrap"/>
-                    <TextBlock Text="Next milestone: system media preview with explicit playback-path diagnostics." TextWrapping="Wrap"/>
-                </StackPanel>
+                <Grid RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="System media preview" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="PlaybackStatusText" Text="Idle" TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1" Background="Black" MinHeight="360">
+                        <MediaPlayerElement x:Name="Player"
+                                            AreTransportControlsEnabled="True"
+                                            AutoPlay="False"
+                                            Stretch="Uniform"/>
+                        <Grid x:Name="PlaybackOverlay" Background="#99000000">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+                                <ProgressRing x:Name="PlaybackProgress"
+                                              IsActive="False"
+                                              Visibility="Collapsed"
+                                              Foreground="White"
+                                              Width="32"
+                                              Height="32"/>
+                                <TextBlock x:Name="PlaybackOverlayText"
+                                           Text="Open a local video file"
+                                           Foreground="White"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           MaxWidth="360"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </Border>
 
             <Border Grid.Column="1" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" CornerRadius="8" Padding="16">
                 <ScrollViewer>
-                    <StackPanel Spacing="8">
-                        <TextBlock Text="Diagnostics" FontSize="18" FontWeight="SemiBold"/>
-                        <TextBlock x:Name="DiagnosticsText" Text="Open a local video file to generate a bounded scaffold diagnostic report." TextWrapping="Wrap"/>
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Metadata facts" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="DiagnosticsText" Text="Open a local video file to inspect available metadata." TextWrapping="Wrap"/>
+
+                        <TextBlock Text="System playback path" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <TextBlock x:Name="SystemPlaybackText"
+                                   Text="Not attempted."
+                                   TextWrapping="Wrap"/>
+
+                        <TextBlock Text="Presentation / rendering claim" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <TextBlock x:Name="PresentationClaimText"
+                                   Text="Unknown and unverified. No custom HDR or Dolby Vision rendering claim."
+                                   TextWrapping="Wrap"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

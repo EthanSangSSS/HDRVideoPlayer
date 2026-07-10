@@ -21,9 +21,7 @@ public static class DiagnosticReportFactory
             $"File: {asset.FileName}",
             $"Container: {asset.Container}",
             $"Probe confidence: {asset.ProbeEvidence.Confidence}",
-            $"Evidence sources: {string.Join(", ", asset.ProbeEvidence.Sources)}",
-            $"Playback path: {asset.PlaybackPath.Kind}",
-            $"Presentation path: {asset.PlaybackPath.Presentation}"
+            $"Evidence sources: {string.Join(", ", asset.ProbeEvidence.Sources)}"
         };
 
         var inferredFacts = new List<string>();
@@ -89,7 +87,6 @@ public static class DiagnosticReportFactory
         {
             asset.HdrSignal.Limitation,
             asset.DolbyVision.Limitation,
-            asset.PlaybackPath.Limitation,
             asset.ProbeEvidence.Limitation
         }
         .Where(static item => !string.IsNullOrWhiteSpace(item))
@@ -100,7 +97,7 @@ public static class DiagnosticReportFactory
         {
             "Validate Media Foundation fields against locally licensed MP4 and MOV fixtures.",
             "Add a bounded container parser for Dolby Vision private metadata before promoting profile candidates.",
-            "Add system playback preview surface.",
+            "Validate Windows system playback against a local codec and container matrix.",
             "Add D3D11 scRGB test-pattern renderer before claiming custom HDR video presentation."
         };
 

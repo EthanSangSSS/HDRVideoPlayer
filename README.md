@@ -4,7 +4,7 @@ Windows-first HDR / Dolby Vision local video player lab built with WinUI 3, Dire
 
 ## Status
 
-Validated scaffold + Media Foundation metadata probe v1 diagnostics.
+Validated scaffold + Media Foundation metadata diagnostics + experimental Windows system-media preview.
 
 This repository intentionally starts with:
 - a WinUI 3 shell;
@@ -63,9 +63,11 @@ This repository starts clean-room. Do not copy code from HDRImageViewer unless G
 - Reads available codec, dimensions, frame rate, audio, color, and luminance attributes through Media Foundation on Windows.
 - Reports low-confidence Dolby Vision filename-marker candidates without claiming parsed Dolby Vision metadata.
 - Shows explicitly bounded HDR / Dolby Vision status.
+- Provides a manual Windows system-media preview with explicit loading, ready, and failed states.
+- Keeps metadata facts, system playback state, and presentation claims separate.
 - Separates system playback, custom renderer, and unsupported states.
 
-Probe v1 remains diagnostics-only. Missing Media Foundation attributes stay unknown, and mastering chromaticity coordinates plus Dolby Vision private metadata are not parsed.
+Probe v1 remains diagnostics-only. System playback success does not establish HDR or Dolby Vision presentation accuracy; presentation remains unknown until independently measured.
 
 ## Non-goals
 

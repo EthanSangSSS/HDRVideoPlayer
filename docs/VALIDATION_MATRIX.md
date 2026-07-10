@@ -20,7 +20,7 @@
 | HDR10 metadata | detect_only | PQ/BT.2020/luminance attributes when exposed by Media Foundation |
 | HLG metadata | detect_only | HLG/BT.2020 attributes when exposed by Media Foundation |
 | Dolby Vision filename-marker candidate detection | detect_only | filename marker only; no container parsing or dynamic metadata application |
-| System playback | not_started | `SystemMedia` path |
+| System playback preview | experimental | `MediaPlayerElement` open/ready/failed state; local codec matrix still required |
 | D3D11 scRGB renderer | not_started | static test pattern |
 | P010/NV12 video frame path | not_started | custom frame rendering |
 | Audio sync | not_started | basic player usability |

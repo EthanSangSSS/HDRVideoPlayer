@@ -6,7 +6,7 @@ Public portfolio project for a Windows-first HDR / Dolby Vision local player and
 
 ## Current phase
 
-Validated scaffold with Media Foundation metadata probe v1 diagnostics.
+Validated scaffold with Media Foundation metadata diagnostics and an experimental Windows system-media preview.
 
 ## Product boundary
 
@@ -26,12 +26,12 @@ This is not a certified Dolby Vision product. It does not bypass DRM. It does no
 
 ## Next PR
 
-`feat/system-playback-preview`
+`chore/system-playback-validation`
 
 Scope:
 
-- Add a Windows system-media preview surface without changing the custom renderer path.
-- Keep metadata facts, presentation-path facts, and playback limitations separate.
+- Validate the system-media preview with locally licensed, uncommitted codec/container fixtures.
+- Record open/ready/failed results separately from observed presentation behavior.
 - No codec binaries.
 - No sample media.
 - No Dolby rendering claim.
