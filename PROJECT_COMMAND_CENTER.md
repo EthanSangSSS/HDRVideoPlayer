@@ -24,14 +24,19 @@ This is not a certified Dolby Vision product. It does not bypass DRM. It does no
 - `docs/HDRIMAGEVIEWER_INFLUENCE.md`
 - `AGENTS.md`
 
-## Next PR
+## Current validation gate
 
-`chore/system-playback-validation`
+`chore/system-playback-validation` provides the local-only protocol and record generator. Run it on Windows with locally licensed, uncommitted codec/container fixtures before selecting the next playback feature.
 
-Scope:
+Required evidence:
 
-- Validate the system-media preview with locally licensed, uncommitted codec/container fixtures.
-- Record open/ready/failed results separately from observed presentation behavior.
+- metadata facts recorded separately from inferred facts and unknowns;
+- Windows system-media result recorded as `Ready` or `Failed`;
+- visible presentation observation recorded separately;
+- presentation claim retained as unknown and unverified.
+
+Boundaries:
+
 - No codec binaries.
 - No sample media.
 - No Dolby rendering claim.

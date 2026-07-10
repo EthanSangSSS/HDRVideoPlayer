@@ -103,5 +103,6 @@ If this is not yet in GitHub:
 - `docs/DOLBY_VISION_STRATEGY.md`
 - `docs/LEGAL_AND_CODEC_BOUNDARY.md`
 - `docs/VALIDATION_MATRIX.md`
+- `docs/SYSTEM_PLAYBACK_VALIDATION.md`
 - `docs/ROADMAP.md`
 - `AGENTS.md`
