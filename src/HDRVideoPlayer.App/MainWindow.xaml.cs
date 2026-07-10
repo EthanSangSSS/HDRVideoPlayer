@@ -34,18 +34,15 @@ public sealed partial class MainWindow : Window
         var asset = _probe.Probe(file.Path);
         var report = DiagnosticReportFactory.Create(asset);
 
-        DiagnosticsText.Text = string.Join(
-            Environment.NewLine,
-            new[]
-            {
-                "Facts:",
-                ..report.Facts.Select(static f => $"- {f}"),
-                "",
-                "Limitations:",
-                ..report.Limitations.Select(static l => $"- {l}"),
-                "",
-                "Next tests:",
-                ..report.NextTests.Select(static n => $"- {n}")
-            });
+        var lines = new List<string> { "Facts:" };
+        lines.AddRange(report.Facts.Select(static f => $"- {f}"));
+        lines.Add("");
+        lines.Add("Limitations:");
+        lines.AddRange(report.Limitations.Select(static l => $"- {l}"));
+        lines.Add("");
+        lines.Add("Next tests:");
+        lines.AddRange(report.NextTests.Select(static n => $"- {n}"));
+
+        DiagnosticsText.Text = string.Join(Environment.NewLine, lines);
     }
 }

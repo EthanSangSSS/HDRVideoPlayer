@@ -13,7 +13,7 @@ Do not:
 - claim Dolby Vision certification;
 - distribute proprietary Dolby SDKs;
 - bypass DRM;
-- ship pirated samples;
+- ship unlicensed samples;
 - claim Profile 5 / 7 correctness without proof.
 
 Allowed:
