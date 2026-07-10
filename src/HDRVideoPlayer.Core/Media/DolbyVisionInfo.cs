@@ -2,7 +2,7 @@ namespace HDRVideoPlayer.Core.Media;
 
 public sealed record DolbyVisionInfo(
     bool MarkersDetected,
-    string ProfileCandidate,
+    DolbyVisionProfileCandidate ProfileCandidate,
     string LevelCandidate,
     bool RpuDetected,
     bool Hdr10CompatibleBaseLayer,
@@ -12,10 +12,19 @@ public sealed record DolbyVisionInfo(
 {
     public static DolbyVisionInfo Unknown => new(
         false,
-        "unknown",
+        DolbyVisionProfileCandidate.Unknown,
         "unknown",
         false,
         false,
         CapabilityState.NotStarted,
-        "Dolby Vision parsing is not implemented. Early builds may only show extension/container heuristics.");
+        "Dolby Vision parsing is not implemented. Dynamic metadata application is not implemented.");
+}
+
+public enum DolbyVisionProfileCandidate
+{
+    Unknown,
+    Profile5,
+    Profile7,
+    Profile81,
+    Profile84
 }

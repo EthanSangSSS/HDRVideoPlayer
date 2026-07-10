@@ -6,7 +6,7 @@ Public portfolio project for a Windows-first HDR / Dolby Vision local player and
 
 ## Current phase
 
-Scaffold / Milestone 0.
+Validated scaffold with metadata probe v0 diagnostics.
 
 ## Product boundary
 
@@ -26,13 +26,12 @@ This is not a certified Dolby Vision product. It does not bypass DRM. It does no
 
 ## Next PR
 
-`chore/winui-shell-validation`
+`feat/media-foundation-probe-v1`
 
 Scope:
 
-- Verify WinUI scaffold builds.
-- Fix template issues.
-- Keep metadata probe as bounded stub.
+- Replace v0 extension/filename heuristics with verified Media Foundation metadata extraction.
+- Populate stream, HDR, and Dolby Vision evidence only when parsed.
 - No codec binaries.
 - No sample media.
 - No Dolby rendering claim.

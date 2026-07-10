@@ -27,7 +27,7 @@ Expected initial projects:
 ## First implementation PR sequence
 
 1. `chore/winui-shell-validation`: ensure scaffold builds on Windows; fix project template issues; no playback claims.
-2. `feat/media-probe-v0`: improve metadata model; add JSON diagnostic output; still no codec binary bundle.
+2. `feat/media-probe-v0`: improve metadata evidence and diagnostics; keep unparsed metadata unknown; still no codec binary bundle.
 3. `feat/system-playback-preview`: add system media playback surface; label path as system playback; record limitations.
 4. `feat/d3d11-scrgb-test-pattern`: add D3D11 renderer project; static HDR test pattern only; no video frames.
 5. `feat/video-frame-p010-path`: Media Foundation / D3D11 frame extraction; PQ/HLG shader conversion; video-only playback.

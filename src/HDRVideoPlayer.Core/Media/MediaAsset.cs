@@ -1,3 +1,5 @@
+using HDRVideoPlayer.Core.Metadata;
+
 namespace HDRVideoPlayer.Core.Media;
 
 public sealed record MediaAsset(
@@ -8,7 +10,8 @@ public sealed record MediaAsset(
     IReadOnlyList<AudioStreamInfo> AudioStreams,
     HdrSignal HdrSignal,
     DolbyVisionInfo DolbyVision,
-    PlaybackPath PlaybackPath
+    PlaybackPath PlaybackPath,
+    ProbeEvidence ProbeEvidence
 );
 
 public sealed record VideoStreamInfo(
