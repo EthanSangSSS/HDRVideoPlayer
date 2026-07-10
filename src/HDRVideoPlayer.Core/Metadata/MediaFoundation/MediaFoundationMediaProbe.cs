@@ -297,10 +297,9 @@ public sealed class MediaFoundationMediaProbe : IMediaProbe
         }
     }
 
-    [SupportedOSPlatform("windows")]
     private static void ReleaseComObject(object? value)
     {
-        if (value is not null && Marshal.IsComObject(value))
+        if (OperatingSystem.IsWindows() && value is not null && Marshal.IsComObject(value))
         {
             _ = Marshal.FinalReleaseComObject(value);
         }
