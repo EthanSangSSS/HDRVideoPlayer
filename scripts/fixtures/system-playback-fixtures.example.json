@@ -1,0 +1,38 @@
+[
+  {
+    "id": "sdr-h264-mp4",
+    "category": "sdr_h264_mp4",
+    "path": "C:\\licensed-media\\sdr-h264.mp4",
+    "notes": "Replace with a locally licensed SDR H.264 MP4. This file is never committed."
+  },
+  {
+    "id": "hdr10-hevc-main10",
+    "category": "hdr10_hevc_main10",
+    "path": "C:\\licensed-media\\hdr10-main10.mp4",
+    "notes": "Use an MP4 or MOV with a locally verified HEVC Main10 HDR10 source."
+  },
+  {
+    "id": "hlg",
+    "category": "hlg",
+    "path": "C:\\licensed-media\\hlg.mp4",
+    "notes": "Use a locally licensed HLG source."
+  },
+  {
+    "id": "dolby-vision-profile-8-1",
+    "category": "dolby_vision_profile_8_1_fallback",
+    "path": "C:\\licensed-media\\dv-profile-8.1.mp4",
+    "notes": "Record metadata and system behavior. Do not infer Dolby Vision rendering from an open result."
+  },
+  {
+    "id": "dolby-vision-profile-5-or-7",
+    "category": "dolby_vision_profile_5_or_7_detect_only",
+    "path": "C:\\licensed-media\\dv-profile-5-or-7.mp4",
+    "notes": "Detection-only case. Record any system result without claiming presentation correctness."
+  },
+  {
+    "id": "unsupported-or-missing-codec",
+    "category": "unsupported_or_missing_codec",
+    "path": "C:\\licensed-media\\unsupported-or-missing-codec.mp4",
+    "notes": "Use a file or Windows installation expected to exercise rejection or a missing codec."
+  }
+]
