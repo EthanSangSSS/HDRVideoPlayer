@@ -1,0 +1,51 @@
+name: macOS
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  swift-build-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build macOS package
+        run: swift build --package-path macos/HDRVideoPlayerMac
+      - name: Test macOS core
+        run: swift test --package-path macos/HDRVideoPlayerMac
+      - name: Public boundary scan
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          media_files="$(find . -type f \
+            \( -iname '*.mp4' -o -iname '*.mkv' -o -iname '*.mov' -o -iname '*.m4v' -o -iname '*.hevc' -o -iname '*.h265' -o -iname '*.av1' \) \
+            -not -path './.git/*' -not -path '*/.build/*' -print)"
+          if [[ -n "$media_files" ]]; then
+            echo "Committed media files are not allowed:"
+            echo "$media_files"
+            exit 1
+          fi
+
+          certified_dv='certified Dolby Vision'
+          full_dv='full Dolby Vision'
+          applies_dv='applies Dolby Vision dynamic'
+          drm_term='DRM'
+          forbidden_pattern="${certified_dv} playback|${full_dv} support|${applies_dv} metadata|${drm_term} bypass|bypass ${drm_term}"
+          matches="$(git grep -nEi "$forbidden_pattern" -- README.md docs AGENTS.md PROJECT_COMMAND_CENTER.md macos .github scripts || true)"
+          affirmative="$(printf '%s\n' "$matches" \
+            | grep -Ev '^scripts/public-safety-scan\.ps1:' \
+            | grep -Eiv 'do not|does not|did not|must not|no |not |without|forbidden|boundary|avoid|never|out of scope' \
+            || true)"
+          if [[ -n "$affirmative" ]]; then
+            echo "Potential overclaiming detected:"
+            echo "$affirmative"
+            exit 1
+          fi
+
+          echo "macOS public boundary scan passed."

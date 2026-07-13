@@ -65,3 +65,34 @@ Status: in progress. The Windows system-media surface and runtime status are wir
 - Profile 8.1 fallback.
 - Profile 5 / 7 detect-only.
 - No certification claim.
+
+## Parallel macOS track
+
+The macOS track follows the same evidence boundaries but does not imply feature parity with Windows.
+
+### macOS Milestone 0 — System preview scaffold
+
+Status: implemented in the scaffold; local fixture validation remains.
+
+- Swift Package targeting macOS 13 or later.
+- AppKit shell and AVPlayerView system preview.
+- AVFoundation/CoreMedia metadata facts.
+- NSScreen EDR capability facts.
+- Pure model and diagnostic tests.
+- No custom Metal renderer or VideoToolbox frame path.
+
+### macOS Milestone 1 — Local system-preview validation
+
+- Run authorized, uncommitted SDR, HDR10, HLG, Dolby Vision candidate, and unsupported fixtures.
+- Record metadata, AVPlayer state, EDR/display observation, and presentation claim separately.
+
+### macOS Milestone 2 — Metal EDR test pattern
+
+- Render a static EDR test pattern.
+- Validate drawable format, EDR headroom, color-space assumptions, and measurement procedure.
+- Do not add decoded video frames.
+
+### macOS Milestone 3 — Custom video-frame experiment
+
+- Evaluate VideoToolbox, CVPixelBuffer, and Metal integration.
+- Keep audio, timing, color conversion, and presentation validation as explicit gates.

@@ -1,10 +1,10 @@
 # HDRVideoPlayer
 
-Windows-first HDR / Dolby Vision local video player lab built with WinUI 3, Direct3D 11, DXGI, Media Foundation, and an evidence-first HDR diagnostics model.
+Windows-first HDR / Dolby Vision local video player lab with an experimental parallel macOS-native track and an evidence-first HDR diagnostics model.
 
 ## Status
 
-Validated scaffold + Media Foundation metadata diagnostics + experimental Windows system-media preview.
+Validated Windows scaffold + Media Foundation metadata diagnostics + experimental Windows system-media preview. An experimental macOS Swift Package scaffold adds AVFoundation diagnostics, AVPlayer system preview, and NSScreen EDR facts without claiming platform parity.
 
 This repository intentionally starts with:
 - a WinUI 3 shell;
@@ -15,6 +15,8 @@ This repository intentionally starts with:
 - CI and bootstrap scripts.
 
 It does **not** yet claim correct HDR10, HLG, or Dolby Vision playback.
+
+The macOS scaffold is a separate early track. It does not add a custom Metal renderer, a VideoToolbox frame path, or proof of HDR or Dolby Vision presentation accuracy.
 
 ## Why this exists
 
@@ -54,6 +56,18 @@ This repository starts clean-room. Do not copy code from HDRImageViewer unless G
 | Renderer v2 | P010/NV12 video frame path |
 | Dolby Vision | detection first, Profile 8.1 HDR10-compatible fallback later |
 
+## Experimental macOS track
+
+The macOS scaffold lives under `macos/HDRVideoPlayerMac` as a Swift Package targeting macOS 13 or later:
+
+- AppKit executable shell and local file picker;
+- AVKit / AVPlayer system-media preview;
+- AVFoundation / CoreMedia metadata diagnostics;
+- NSScreen EDR capability facts;
+- Swift-native core models and pure model tests.
+
+AVPlayer readiness is only a system-path state. Presentation remains unknown and unverified, and no custom Metal HDR or Dolby Vision rendering accuracy is claimed.
+
 ## Current scaffold capabilities
 
 - Opens as a WinUI 3 application shell.
@@ -88,6 +102,14 @@ dotnet build .\src\HDRVideoPlayer.App\HDRVideoPlayer.App.csproj -c Debug
 dotnet test .\tests\HDRVideoPlayer.Core.Tests\HDRVideoPlayer.Core.Tests.csproj -c Debug
 ```
 
+macOS 13 or later with Xcode command-line tools:
+
+```bash
+swift build --package-path macos/HDRVideoPlayerMac
+swift test --package-path macos/HDRVideoPlayerMac
+swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMac
+```
+
 ## Repo creation
 
 If this is not yet in GitHub:
@@ -104,5 +126,8 @@ If this is not yet in GitHub:
 - `docs/LEGAL_AND_CODEC_BOUNDARY.md`
 - `docs/VALIDATION_MATRIX.md`
 - `docs/SYSTEM_PLAYBACK_VALIDATION.md`
+- `docs/MACOS_FEASIBILITY.md`
+- `docs/MACOS_ARCHITECTURE.md`
+- `docs/MACOS_VALIDATION_MATRIX.md`
 - `docs/ROADMAP.md`
 - `AGENTS.md`

@@ -32,6 +32,8 @@ Probe v1 reads Media Foundation stream and media-type attributes on Windows, the
 
 See `docs/SYSTEM_PLAYBACK_VALIDATION.md` for the local-only fixture protocol. A Windows `Ready` event is evidence only for the system-media open path and does not change the presentation claim.
 
+The parallel macOS capability states and evidence live in `docs/MACOS_VALIDATION_MATRIX.md`. They are not duplicated here, and they do not imply parity with the Windows track.
+
 ## Evidence rule
 
 Every feature PR must update this matrix or explain why no validation state changed.
