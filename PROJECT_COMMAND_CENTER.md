@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Public portfolio project for a Windows-first HDR / Dolby Vision local player and diagnostics workbench.
+Public portfolio project for a Windows-first HDR / Dolby Vision local player and diagnostics workbench, with an experimental parallel macOS-native track.
 
 ## Current phase
 
-Validated scaffold with Media Foundation metadata diagnostics and an experimental Windows system-media preview.
+Validated Windows scaffold with Media Foundation metadata diagnostics and an experimental Windows system-media preview. The parallel macOS scaffold uses AVFoundation, AVKit, AppKit, and NSScreen diagnostics.
 
 ## Product boundary
 
@@ -20,6 +20,9 @@ This is not a certified Dolby Vision product. It does not bypass DRM. It does no
 - `docs/DOLBY_VISION_STRATEGY.md`
 - `docs/LEGAL_AND_CODEC_BOUNDARY.md`
 - `docs/VALIDATION_MATRIX.md`
+- `docs/MACOS_FEASIBILITY.md`
+- `docs/MACOS_ARCHITECTURE.md`
+- `docs/MACOS_VALIDATION_MATRIX.md`
 - `docs/ROADMAP.md`
 - `docs/HDRIMAGEVIEWER_INFLUENCE.md`
 - `AGENTS.md`
@@ -47,4 +50,26 @@ Validation:
 - `dotnet build .\src\HDRVideoPlayer.App\HDRVideoPlayer.App.csproj -c Debug`
 - `dotnet test .\tests\HDRVideoPlayer.Core.Tests\HDRVideoPlayer.Core.Tests.csproj -c Debug`
 - `.\scripts\public-safety-scan.ps1`
+- `git diff --check`
+
+## Parallel macOS track
+
+Current scope:
+
+- Swift Package under `macos/HDRVideoPlayerMac` targeting macOS 13 or later.
+- AppKit + AVPlayerView system-media preview.
+- AVFoundation/CoreMedia metadata facts.
+- NSScreen EDR capability facts.
+- Unknown and unverified presentation claim.
+
+Next macOS PR:
+
+`chore/macos-local-validation`
+
+Use locally authorized, uncommitted fixtures to record metadata facts, AVPlayer `ready`/`failed` state, EDR/display observation, and presentation limitations separately. Do not start the Metal EDR test-pattern milestone until this record is reviewed.
+
+macOS validation:
+
+- `swift build --package-path macos/HDRVideoPlayerMac`
+- `swift test --package-path macos/HDRVideoPlayerMac`
 - `git diff --check`

@@ -2,7 +2,7 @@
 
 ## Mission
 
-Build HDRVideoPlayer into a Windows-first HDR / Dolby Vision local video player and diagnostics workbench.
+Build HDRVideoPlayer into a Windows-first HDR / Dolby Vision local video player and diagnostics workbench, with a clearly separated experimental macOS-native track.
 
 ## Ground rules
 
@@ -13,6 +13,9 @@ Build HDRVideoPlayer into a Windows-first HDR / Dolby Vision local video player 
 - Do not copy code from HDRImageViewer unless GPLv3-or-later obligations are preserved.
 - Treat HDR10, HLG, Dolby Vision Profile 5, Profile 7, and Profile 8.1 as separate capabilities.
 - Every playback claim must state evidence, sample type, display path, renderer path, and limitation.
+- Keep macOS metadata facts, AVPlayer state, NSScreen EDR facts, and presentation claims separate.
+- AVPlayer readiness does not prove HDR or Dolby Vision presentation accuracy.
+- Do not add a macOS Metal renderer or VideoToolbox custom frame path before the local system-preview matrix is reviewed.
 
 ## Current repo state
 
@@ -23,6 +26,7 @@ Expected initial projects:
 - `src/HDRVideoPlayer.App`
 - `src/HDRVideoPlayer.Core`
 - `tests/HDRVideoPlayer.Core.Tests`
+- `macos/HDRVideoPlayerMac`
 
 ## First implementation PR sequence
 
@@ -31,6 +35,13 @@ Expected initial projects:
 3. `feat/system-playback-preview`: add system media playback surface; label path as system playback; record limitations.
 4. `feat/d3d11-scrgb-test-pattern`: add D3D11 renderer project; static HDR test pattern only; no video frames.
 5. `feat/video-frame-p010-path`: Media Foundation / D3D11 frame extraction; PQ/HLG shader conversion; video-only playback.
+
+## macOS parallel sequence
+
+1. `feat/macos-system-preview-scaffold`: Swift Package, AVFoundation metadata, AVPlayerView preview, NSScreen EDR facts; no custom renderer.
+2. `chore/macos-local-validation`: locally authorized, uncommitted fixture matrix; keep readiness and presentation observations separate.
+3. `feat/macos-edr-test-pattern`: static Metal EDR test pattern only; no video frames.
+4. Future: VideoToolbox / CVPixelBuffer / Metal frame path after separate validation.
 
 ## Required PR review output
 
@@ -55,5 +66,13 @@ dotnet restore .\src\HDRVideoPlayer.App\HDRVideoPlayer.App.csproj
 dotnet build .\src\HDRVideoPlayer.App\HDRVideoPlayer.App.csproj -c Debug
 dotnet test .\tests\HDRVideoPlayer.Core.Tests\HDRVideoPlayer.Core.Tests.csproj -c Debug
 .\scripts\public-safety-scan.ps1
+git diff --check
+```
+
+macOS:
+
+```bash
+swift build --package-path macos/HDRVideoPlayerMac
+swift test --package-path macos/HDRVideoPlayerMac
 git diff --check
 ```
