@@ -4,7 +4,7 @@ Windows-first HDR / Dolby Vision local video player lab with an experimental par
 
 ## Status
 
-Validated Windows scaffold + Media Foundation metadata diagnostics + experimental Windows system-media preview. An experimental macOS Swift Package scaffold adds AVFoundation diagnostics, AVPlayer system preview, and NSScreen EDR facts without claiming platform parity.
+Validated Windows scaffold + Media Foundation metadata diagnostics + experimental Windows system-media preview. The experimental macOS Swift Package adds AVFoundation diagnostics, AVPlayer system preview, NSScreen EDR facts, and a completed bounded local system-open matrix without claiming platform parity or presentation accuracy.
 
 This repository intentionally starts with:
 - a WinUI 3 shell;
@@ -16,7 +16,7 @@ This repository intentionally starts with:
 
 It does **not** yet claim correct HDR10, HLG, or Dolby Vision playback.
 
-The macOS scaffold is a separate early track. It does not add a custom Metal renderer, a VideoToolbox frame path, or proof of HDR or Dolby Vision presentation accuracy.
+The macOS scaffold is a separate early track. The local matrix records system open states only; it does not add a custom Metal renderer, a VideoToolbox frame path, or proof of HDR or Dolby Vision presentation accuracy.
 
 ## Why this exists
 
@@ -108,6 +108,9 @@ macOS 13 or later with Xcode command-line tools:
 swift build --package-path macos/HDRVideoPlayerMac
 swift test --package-path macos/HDRVideoPlayerMac
 swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMac
+# Requires a repository-external manifest with authorized local media:
+swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacLocalValidation \
+  --manifest /absolute/path/macos-local-validation-fixtures.json
 ```
 
 ## Repo creation
@@ -129,5 +132,6 @@ If this is not yet in GitHub:
 - `docs/MACOS_FEASIBILITY.md`
 - `docs/MACOS_ARCHITECTURE.md`
 - `docs/MACOS_VALIDATION_MATRIX.md`
+- `docs/MACOS_LOCAL_VALIDATION.md`
 - `docs/ROADMAP.md`
 - `AGENTS.md`

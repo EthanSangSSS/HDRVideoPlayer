@@ -72,7 +72,7 @@ The macOS track follows the same evidence boundaries but does not imply feature 
 
 ### macOS Milestone 0 — System preview scaffold
 
-Status: implemented in the scaffold; local fixture validation remains.
+Status: implemented in the scaffold and exercised by the local system-preview matrix.
 
 - Swift Package targeting macOS 13 or later.
 - AppKit shell and AVPlayerView system preview.
@@ -83,10 +83,14 @@ Status: implemented in the scaffold; local fixture validation remains.
 
 ### macOS Milestone 1 — Local system-preview validation
 
+Status: complete for the bounded local gate. The repository-external six-category run completed without timeouts, and only a sanitized summary is committed.
+
 - Run authorized, uncommitted SDR, HDR10, HLG, Dolby Vision candidate, and unsupported fixtures.
 - Record metadata, AVPlayer state, EDR/display observation, and presentation claim separately.
 
 ### macOS Milestone 2 — Metal EDR test pattern
+
+Status: next. The local system-preview matrix is complete and reviewed.
 
 - Render a static EDR test pattern.
 - Validate drawable format, EDR headroom, color-space assumptions, and measurement procedure.
