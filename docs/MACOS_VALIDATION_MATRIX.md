@@ -25,8 +25,8 @@
 | Dolby Vision Profile 5/7 detection-only | `detect_only` | A structural Profile 5 fixture exposed `dvhe` and reached `ready`; dynamic metadata application and color presentation were not validated | Keep Profile 5/7 detect-only |
 | Unsupported system path | `system_preview` | A local unsupported-container video reached `failed` with no timeout | Preserve explicit failure reporting |
 | EDR display diagnostic | `detect_only` | Local run recorded maximum EDR component value `1.00`, so EDR did not appear available in that context | Validate the later static pattern on an EDR-capable display context |
-| Metal EDR test pattern | `not_started` | The six-category local record is complete and reviewed; no custom renderer exists yet | Start `feat/macos-edr-test-pattern` with static pixels only |
-| VideoToolbox custom frame path | `not_started` | No decoder or frame renderer exists | Start only after Metal EDR test-pattern validation |
+| Metal EDR test pattern | `experimental` | Separate executable configures `rgba16Float`, extended-linear-sRGB, and EDR opt-in; local GPU readback preserved all eight static bands through component `4.00`; the current non-EDR context rendered a nonblank window but exposed only `1.00` current/potential headroom | Record visible/clipping observations on an EDR-capable display; keep accuracy unverified |
+| VideoToolbox custom frame path | `not_started` | No decoder or frame renderer exists | Start only after the EDR-capable display result is reviewed |
 
 ## Evidence rule
 

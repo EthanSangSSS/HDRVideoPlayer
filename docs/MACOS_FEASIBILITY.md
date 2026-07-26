@@ -24,7 +24,7 @@ The file picker permits MP4, MOV, M4V, and MKV selection. MKV acceptance and pla
 
 A custom Metal path requires separate proof for drawable formats, EDR headroom, color transforms, pixel-buffer formats, synchronization, and output measurements. Adding it to the system-preview scaffold would collapse system playback and custom presentation into one untestable claim.
 
-The next renderer milestone should therefore be a static Metal EDR test pattern. A VideoToolbox, CVPixelBuffer, and Metal video-frame path comes only after that test-pattern path and local system-preview validation.
+The renderer milestone is now implemented as a separate static Metal EDR test pattern. A VideoToolbox, CVPixelBuffer, and Metal video-frame path comes only after that test-pattern path is observed on an EDR-capable display.
 
 ## Dolby Vision boundary
 
@@ -46,7 +46,7 @@ No Dolby SDK, certification claim, protected-media handling, or dynamic metadata
 | System metadata | Media Foundation | AVFoundation / CoreMedia |
 | System preview | `MediaPlayerElement` | `AVPlayerView` / `AVPlayer` |
 | Display capability | Future DXGI/HDR diagnostics | `NSScreen` EDR facts |
-| Future test renderer | D3D11 FP16 scRGB | Metal EDR test pattern |
+| Test renderer | D3D11 FP16 scRGB | Isolated Metal `rgba16Float` EDR test pattern |
 | Future custom frames | Media Foundation + D3D11 | VideoToolbox + CVPixelBuffer + Metal |
 
 ## Public boundary
@@ -55,6 +55,6 @@ No Dolby SDK, certification claim, protected-media handling, or dynamic metadata
 - No codec binaries or third-party media libraries.
 - No bundled or committed media samples.
 - No Dolby SDKs.
-- No custom Metal renderer in this milestone.
+- The custom Metal scope is limited to fixed test pixels; no decoded video frames are accepted.
 - No HDR or Dolby Vision presentation-accuracy claim.
 - No Dolby Vision certification claim.

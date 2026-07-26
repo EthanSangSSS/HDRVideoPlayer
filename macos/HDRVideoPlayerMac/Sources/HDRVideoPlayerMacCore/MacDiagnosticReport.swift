@@ -77,7 +77,7 @@ public enum MacDiagnosticReportFactory {
             "MaxCLL and MaxFALL are not parsed.",
             "Dolby Vision RPU, profile, level, and base-layer compatibility are not parsed from the container.",
             "Presentation accuracy is unknown and unverified.",
-            "Custom renderer path and output color transform are unknown because no custom Metal renderer exists."
+            "The system-preview report does not inspect or validate the separate static Metal EDR test-pattern path."
         ]
         if asset.videoStreams.isEmpty {
             unknowns.append("Video track metadata is unavailable.")
@@ -109,7 +109,7 @@ public enum MacDiagnosticReportFactory {
                 "Run local macOS playback validation with authorized, uncommitted fixtures.",
                 "Compare AVFoundation metadata with known-good file metadata.",
                 "Record EDR output observations separately from playback readiness.",
-                "Add a future Metal EDR test pattern before custom HDR presentation claims.",
+                "Validate the separate static Metal EDR test pattern on an EDR-capable display before any video-frame work.",
                 "Evaluate a future VideoToolbox, CVPixelBuffer, and Metal frame path separately."
             ]
         )

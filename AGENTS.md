@@ -15,7 +15,7 @@ Build HDRVideoPlayer into a Windows-first HDR / Dolby Vision local video player 
 - Every playback claim must state evidence, sample type, display path, renderer path, and limitation.
 - Keep macOS metadata facts, AVPlayer state, NSScreen EDR facts, and presentation claims separate.
 - AVPlayer readiness does not prove HDR or Dolby Vision presentation accuracy.
-- Do not add a macOS Metal renderer or VideoToolbox custom frame path before the local system-preview matrix is reviewed.
+- Keep the macOS Metal test-pattern path static and isolated; do not add VideoToolbox, CVPixelBuffer, or decoded video frames before its EDR-display result is reviewed.
 - Keep every macOS fixture, local manifest, generated report, basename, and hash out of Git; commit only a sanitized matrix summary.
 
 ## Current repo state
