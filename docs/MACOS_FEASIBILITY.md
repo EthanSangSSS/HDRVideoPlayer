@@ -2,7 +2,7 @@
 
 ## Conclusion
 
-A native macOS track is feasible as a parallel, experimental scaffold. AVFoundation and AVKit provide a system-owned path for local file metadata and preview, while AppKit supplies a small native shell and `NSScreen` exposes display EDR capability facts. These APIs are sufficient for the first milestone without adding codec binaries, a custom decoder, or a custom renderer.
+A native macOS track is feasible as a parallel, experimental scaffold. AVFoundation and AVKit provide a system-owned path for local file metadata and preview, while AppKit supplies a small native shell and `NSScreen` exposes separate potential-support, current-headroom, and reference EDR facts. These APIs are sufficient for the first milestone without adding codec binaries, a custom decoder, or a custom renderer.
 
 The macOS track is not feature-parity with the Windows track. Both tracks share an evidence-first diagnostic policy, but their platform APIs and future rendering paths remain independent.
 
@@ -13,7 +13,7 @@ The first milestone uses:
 - AppKit for the executable shell and local file picker;
 - AVKit `AVPlayerView` and AVFoundation `AVPlayer` for system-media preview;
 - AVFoundation tracks and CoreMedia format-description extensions for available metadata facts;
-- `NSScreen.maximumExtendedDynamicRangeColorComponentValue` for an EDR capability observation;
+- `NSScreen.maximumPotentialExtendedDynamicRangeColorComponentValue` for potential EDR support, with current and reference component values reported independently;
 - a Swift Package so source, targets, and tests remain reviewable without generated Xcode project files.
 
 An AVPlayer item reaching `readyToPlay` means the system accepted the source sufficiently to prepare the item. It does not prove sustained playback, HDR output accuracy, Dolby Vision output accuracy, or the existence of a custom renderer.

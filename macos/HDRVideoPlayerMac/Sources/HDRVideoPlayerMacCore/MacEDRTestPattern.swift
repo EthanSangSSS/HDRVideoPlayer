@@ -88,7 +88,7 @@ public enum MacEDRTestPatternReportFactory {
         configuration: MacEDRTestPatternConfiguration = .reference,
         display: MacDisplayDiagnostic
     ) -> MacEDRTestPatternReport {
-        let maximumEDR = display.maximumEDRColorComponentValue
+        let currentEDR = display.maximumCurrentEDRColorComponentValue
             .map { String(format: "%.2f", $0) } ?? "unknown"
         let potentialEDR = display.maximumPotentialEDRColorComponentValue
             .map { String(format: "%.2f", $0) } ?? "unknown"
@@ -107,10 +107,11 @@ public enum MacEDRTestPatternReportFactory {
             ],
             displayFacts: [
                 "Screen: \(display.screenName ?? "unknown")",
-                "Current maximum EDR color component value: \(maximumEDR)",
-                "Potential maximum EDR color component value: \(potentialEDR)",
-                "Reference maximum EDR color component value: \(referenceEDR)",
-                "EDR appears available: \(display.isEDRAvailable)"
+                "Display supports EDR: \(display.supportsEDR)",
+                "Current EDR headroom available: \(display.hasCurrentEDRHeadroom)",
+                "Current maximum EDR component: \(currentEDR)",
+                "Potential maximum EDR component: \(potentialEDR)",
+                "Reference maximum EDR component: \(referenceEDR)"
             ],
             unknowns: [
                 "Visible luminance and clipping have not been measured.",

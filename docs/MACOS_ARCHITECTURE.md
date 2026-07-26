@@ -66,8 +66,10 @@ MacEDRTestPatternConfiguration
 |---|---|---|
 | Metadata facts | Track count, codec candidate, size, frame rate, color properties exposed by public APIs | Decode success or presentation accuracy |
 | System playback state | AVPlayer item `idle`, `loading`, `ready`, or `failed` | HDR or Dolby Vision output correctness |
-| Display / EDR capability | Screen name, maximum EDR component value, value greater than 1.0 | Video is using EDR or is color-accurate |
-| Static Metal test-pattern facts | FP16 format, extended-linear-sRGB space, EDR request, submitted component values, GPU readback | Visible luminance, color accuracy, or any video rendering behavior |
+| Display support | Potential maximum EDR component and `supportsEDR` | Current headroom or visible output |
+| Current display headroom | Current maximum EDR component and `hasCurrentEDRHeadroom` | Potential capability or stable future headroom |
+| Reference EDR | Reference maximum EDR component | Display support, current headroom, or accuracy |
+| Static Metal test-pattern facts | FP16 format, extended-linear-sRGB space, EDR request, submitted component values, storage mode, synchronization, GPU completion, and readback | Visible luminance, color accuracy, or any video rendering behavior |
 | Presentation / rendering claim | Path is system AVPlayer or static Metal test pattern; accuracy remains unverified | HDR video accuracy, dynamic metadata application, or certification |
 
 Both executables keep these layers separate. The system preview retains its bounded claim, and the test pattern reports: `Unknown and unverified. Static Metal EDR test pixels do not establish HDR or Dolby Vision video rendering accuracy.`
@@ -80,16 +82,18 @@ If the URL is missing or AVFoundation loading fails, the probe returns a bounded
 
 ## Display diagnostics
 
-`MacDisplayDiagnostics` runs on the main actor because `NSScreen` is an AppKit object. It converts current, potential, and reference EDR component values into a pure `MacDisplayDiagnostic` value so EDR model behavior can be tested without a display or media fixture.
+`MacDisplayDiagnostics` runs on the main actor because `NSScreen` is an AppKit object. It converts current, potential, and reference EDR component values into a pure `MacDisplayDiagnostic` value so EDR model behavior can be tested without a display or media fixture. `supportsEDR` derives only from a potential value above `1.0`; `hasCurrentEDRHeadroom` derives only from a current value above `1.0`. Unknown values produce no positive inference.
 
-An EDR value above 1.0 means EDR headroom appears available for that screen. It is not evidence that AVPlayer selected an HDR path or that any output is accurate.
+Potential support and current headroom are independent. Neither is evidence that AVPlayer selected an HDR path or that any output is accurate.
 
 ## Static Metal EDR path
 
-The static renderer uses an `rgba16Float` MTKView, the extended-linear-sRGB color space, and `CAMetalLayer.wantsExtendedDynamicRangeContent`. A fullscreen shader draws eight fixed bands. Tests also render to an offscreen FP16 texture and read every band back from the GPU.
+The static renderer uses an `rgba16Float` MTKView, the extended-linear-sRGB color space, and `CAMetalLayer.wantsExtendedDynamicRangeContent`. A fullscreen shader draws eight fixed bands. The interactive renderer reports configured, submitted, completed, or failed state from the asynchronous command-buffer completion handler without blocking the UI.
+
+Offscreen validation selects `.shared` storage on unified-memory devices and `.managed` storage on non-unified devices. Managed textures receive an explicit blit synchronization before command completion and CPU `getBytes`. Pure policy tests cover both choices; actual Intel/discrete-GPU hardware validation remains required because the current host exercises only unified memory.
 
 This validates the drawable configuration and submitted values only. Visible EDR output remains unknown until the pattern is observed or measured on an EDR-capable display using [MACOS_EDR_TEST_PATTERN.md](MACOS_EDR_TEST_PATTERN.md).
 
 ## Future paths
 
-A later custom video path may evaluate VideoToolbox decode, CVPixelBuffer transfer, Metal textures, color conversion, timing, and audio synchronization. None of those components exists, and that work remains gated on separate EDR display validation.
+A later custom video path may evaluate VideoToolbox decode, CVPixelBuffer transfer, Metal textures, color conversion, timing, and audio synchronization. None of those components exists. That work remains blocked until this fix is reviewed and `chore/macos-edr-display-validation` records the static pattern on a display with potential EDR headroom above `1.0` while preserving unknown/unverified presentation accuracy.

@@ -40,7 +40,9 @@ final class MacLocalValidationTests: XCTestCase {
             operatingSystem: "macOS test",
             display: MacDisplayDiagnostic(
                 screenName: "",
-                maximumEDRColorComponentValue: 1.75
+                maximumCurrentEDRColorComponentValue: 1.0,
+                maximumPotentialEDRColorComponentValue: 1.75,
+                maximumReferenceEDRColorComponentValue: 1.25
             )
         )
         let observation = MacLocalValidationObservation(
@@ -65,7 +67,11 @@ final class MacLocalValidationTests: XCTestCase {
         XCTAssertTrue(report.contains("AVFoundation metadata facts"))
         XCTAssertTrue(report.contains("AVPlayer system playback state | ready"))
         XCTAssertTrue(report.contains("Screen: unknown"))
-        XCTAssertTrue(report.contains("maximum EDR color component value: 1.75"))
+        XCTAssertTrue(report.contains("Display supports EDR: true"))
+        XCTAssertTrue(report.contains("Current EDR headroom available: false"))
+        XCTAssertTrue(report.contains("Current maximum EDR component: 1.00"))
+        XCTAssertTrue(report.contains("Potential maximum EDR component: 1.75"))
+        XCTAssertTrue(report.contains("Reference maximum EDR component: 1.25"))
         XCTAssertTrue(report.contains(MacLocalValidationReportRenderer.presentationClaim))
         XCTAssertFalse(report.contains("/licensed-media/"))
     }

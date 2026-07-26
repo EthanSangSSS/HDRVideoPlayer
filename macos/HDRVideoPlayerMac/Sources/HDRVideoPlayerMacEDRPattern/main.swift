@@ -12,6 +12,7 @@ final class EDRPatternAppDelegate: NSObject, NSApplicationDelegate, NSWindowDele
 
     private var window: NSWindow?
     private var renderer: MacEDRMetalRenderer?
+    private var renderState: MacEDRRenderState = .configured
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let window = NSWindow(
@@ -181,14 +182,31 @@ final class EDRPatternAppDelegate: NSObject, NSApplicationDelegate, NSWindowDele
 
     private func configureRenderer() {
         do {
-            renderer = try MacEDRMetalRenderer(view: metalView, configuration: configuration)
-            statusLabel.stringValue = "Static renderer ready"
+            let renderer = try MacEDRMetalRenderer(view: metalView, configuration: configuration)
+            self.renderer = renderer
+            renderer.onRenderStateChange = { [weak self] state in
+                self?.handleRenderState(state)
+            }
             metalView.draw()
         } catch {
             renderer = nil
-            statusLabel.stringValue = "Renderer failed"
-            diagnosticsTextView.string = "Renderer error:\n- \(error.localizedDescription)"
+            handleRenderState(.failed(error.localizedDescription))
         }
+    }
+
+    private func handleRenderState(_ state: MacEDRRenderState) {
+        renderState = state
+        switch state {
+        case .configured:
+            statusLabel.stringValue = "Renderer configured"
+        case .submitted:
+            statusLabel.stringValue = "Frame submitted"
+        case .completed:
+            statusLabel.stringValue = "Frame completed"
+        case .failed:
+            statusLabel.stringValue = "Frame failed"
+        }
+        updateDiagnostics()
     }
 
     @objc
@@ -204,13 +222,18 @@ final class EDRPatternAppDelegate: NSObject, NSApplicationDelegate, NSWindowDele
     }
 
     private func updateDiagnostics() {
-        guard renderer != nil else {
-            return
-        }
         let display = MacDisplayDiagnostics.current(screen: window?.screen ?? NSScreen.main)
         let report = MacEDRTestPatternReportFactory.make(configuration: configuration, display: display)
+        var renderStateFacts = [
+            "Most recent render state: \(renderState.diagnosticValue)",
+            "Command-buffer completion proves GPU completion only; visible EDR luminance remains unverified."
+        ]
+        if let failure = renderState.failureDescription {
+            renderStateFacts.insert("Command-buffer failure: \(failure)", at: 1)
+        }
         diagnosticsTextView.string = [
             section("Renderer facts", report.rendererFacts),
+            section("Interactive render state", renderStateFacts),
             section("Display / EDR facts", report.displayFacts),
             section("Unknowns", report.unknowns),
             section("Limitations", report.limitations),

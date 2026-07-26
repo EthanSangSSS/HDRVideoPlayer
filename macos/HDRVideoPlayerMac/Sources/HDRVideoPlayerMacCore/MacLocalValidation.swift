@@ -221,9 +221,20 @@ public enum MacLocalValidationReportRenderer {
     private static func displaySummary(_ display: MacDisplayDiagnostic) -> String {
         let trimmedName = display.screenName?.trimmingCharacters(in: .whitespacesAndNewlines)
         let name = trimmedName.flatMap { $0.isEmpty ? nil : $0 } ?? "unknown"
-        let maximumEDR = display.maximumEDRColorComponentValue
+        let currentEDR = display.maximumCurrentEDRColorComponentValue
             .map { String(format: "%.2f", $0) } ?? "unknown"
-        return "Screen: \(name); maximum EDR color component value: \(maximumEDR); EDR appears available: \(display.isEDRAvailable)"
+        let potentialEDR = display.maximumPotentialEDRColorComponentValue
+            .map { String(format: "%.2f", $0) } ?? "unknown"
+        let referenceEDR = display.maximumReferenceEDRColorComponentValue
+            .map { String(format: "%.2f", $0) } ?? "unknown"
+        return [
+            "Screen: \(name)",
+            "Display supports EDR: \(display.supportsEDR)",
+            "Current EDR headroom available: \(display.hasCurrentEDRHeadroom)",
+            "Current maximum EDR component: \(currentEDR)",
+            "Potential maximum EDR component: \(potentialEDR)",
+            "Reference maximum EDR component: \(referenceEDR)"
+        ].joined(separator: "; ")
     }
 
     private static func heading(_ value: String) -> String {

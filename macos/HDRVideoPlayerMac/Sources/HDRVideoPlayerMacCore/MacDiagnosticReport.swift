@@ -54,12 +54,11 @@ public enum MacDiagnosticReportFactory {
 
         if let display {
             appendKnown(&facts, label: "Display", value: display.screenName ?? "unknown")
-            appendKnown(
-                &facts,
-                label: "Maximum EDR color component value",
-                value: display.maximumEDRColorComponentValue
-            )
-            facts.append("EDR appears available: \(display.isEDRAvailable)")
+            facts.append("Display supports EDR: \(display.supportsEDR)")
+            facts.append("Current EDR headroom available: \(display.hasCurrentEDRHeadroom)")
+            facts.append("Current maximum EDR component: \(edrValue(display.maximumCurrentEDRColorComponentValue))")
+            facts.append("Potential maximum EDR component: \(edrValue(display.maximumPotentialEDRColorComponentValue))")
+            facts.append("Reference maximum EDR component: \(edrValue(display.maximumReferenceEDRColorComponentValue))")
         }
 
         var inferredFacts: [String] = []
@@ -119,6 +118,10 @@ public enum MacDiagnosticReportFactory {
         if let value {
             facts.append("\(label): \(value)")
         }
+    }
+
+    private static func edrValue(_ value: Double?) -> String {
+        value.map { String(format: "%.2f", $0) } ?? "unknown"
     }
 
     private static func appendKnown(_ facts: inout [String], label: String, value: String) {

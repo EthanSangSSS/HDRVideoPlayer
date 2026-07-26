@@ -60,24 +60,28 @@ Current scope:
 - Swift Package under `macos/HDRVideoPlayerMac` targeting macOS 13 or later.
 - AppKit + AVPlayerView system-media preview.
 - AVFoundation/CoreMedia metadata facts.
-- NSScreen EDR capability facts.
-- Static `rgba16Float` Metal EDR test pixels with GPU readback validation.
+- Separate NSScreen potential-support, current-headroom, and reference EDR facts.
+- Static `rgba16Float` Metal EDR test pixels with unified/managed readback policy and managed-resource synchronization.
+- Asynchronous interactive command-buffer completion and failure reporting.
 - Unknown and unverified presentation claim.
 
 Current macOS PR:
 
-`feat/macos-edr-test-pattern`
+`fix/macos-edr-evidence-and-readback-portability`
 
 The repository-external six-category system-preview record completed without timeouts, and the sanitized result is in `docs/MACOS_VALIDATION_MATRIX.md`. This milestone adds a static Metal EDR test pattern only. It does not accept decoded video frames, add VideoToolbox, or promote HDR or Dolby Vision presentation claims.
 
 Next macOS gate:
 
-Validate the static pattern on an EDR-capable display using `docs/MACOS_EDR_TEST_PATTERN.md`. Do not begin a VideoToolbox/CVPixelBuffer frame path until that observation is reviewed.
+`chore/macos-edr-display-validation`
+
+Validate the static pattern on a display whose potential EDR headroom is greater than `1.0`, recording current, potential, and reference values separately. Do not begin a VideoToolbox/CVPixelBuffer frame path until this fix PR and that physical-display observation are reviewed.
 
 macOS validation:
 
-- `swift build --package-path macos/HDRVideoPlayerMac`
-- `swift test --package-path macos/HDRVideoPlayerMac`
+- `swift build --package-path macos/HDRVideoPlayerMac -Xswiftc -warnings-as-errors`
+- `swift test --package-path macos/HDRVideoPlayerMac -Xswiftc -warnings-as-errors`
+- `swift build --package-path macos/HDRVideoPlayerMac --configuration release -Xswiftc -warnings-as-errors`
 - `swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacEDRPattern`
 - `swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacLocalValidation --manifest /absolute/path/outside-the-repo.json`
 - `git diff --check`
