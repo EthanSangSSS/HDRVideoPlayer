@@ -286,11 +286,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     private func updateDisplayDiagnostics() {
         let diagnostic = MacDisplayDiagnostics.current(screen: window?.screen ?? NSScreen.main)
-        let edrValue = diagnostic.maximumEDRColorComponentValue.map { String(format: "%.2f", $0) } ?? "unknown"
+        let currentEDR = diagnostic.maximumCurrentEDRColorComponentValue
+            .map { String(format: "%.2f", $0) } ?? "unknown"
+        let potentialEDR = diagnostic.maximumPotentialEDRColorComponentValue
+            .map { String(format: "%.2f", $0) } ?? "unknown"
+        let referenceEDR = diagnostic.maximumReferenceEDRColorComponentValue
+            .map { String(format: "%.2f", $0) } ?? "unknown"
         displayDiagnosticsLabel.stringValue = [
             "Screen: \(diagnostic.screenName ?? "unknown")",
-            "Maximum EDR color component value: \(edrValue)",
-            "EDR appears available: \(diagnostic.isEDRAvailable)",
+            "Display supports EDR: \(diagnostic.supportsEDR)",
+            "Current EDR headroom available: \(diagnostic.hasCurrentEDRHeadroom)",
+            "Current maximum EDR component: \(currentEDR)",
+            "Potential maximum EDR component: \(potentialEDR)",
+            "Reference maximum EDR component: \(referenceEDR)",
             diagnostic.limitation
         ].joined(separator: "\n")
 

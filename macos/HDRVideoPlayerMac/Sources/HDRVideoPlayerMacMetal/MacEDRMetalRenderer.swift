@@ -14,6 +14,7 @@ public enum MacEDRMetalError: LocalizedError {
     case commandCreation
     case renderEncoding
     case commandFailure(String)
+    case synchronizationEncoding
     case metalLayerUnavailable
     case colorSpaceUnavailable
     case unsupportedConfiguration(String)
@@ -36,6 +37,8 @@ public enum MacEDRMetalError: LocalizedError {
             return "Metal render encoding failed."
         case .commandFailure(let detail):
             return "Metal command execution failed: \(detail)"
+        case .synchronizationEncoding:
+            return "Metal managed-resource synchronization encoding failed."
         case .metalLayerUnavailable:
             return "The MTKView does not expose a CAMetalLayer."
         case .colorSpaceUnavailable:
@@ -68,15 +71,105 @@ public struct MacEDRReadbackSample: Equatable, Sendable {
     }
 }
 
+public enum MacEDRReadbackStorageMode: String, Equatable, Sendable {
+    case shared
+    case managed
+}
+
+public struct MacEDRReadbackResourcePolicy: Equatable, Sendable {
+    public var storageMode: MacEDRReadbackStorageMode
+    public var requiresSynchronization: Bool
+
+    public init(storageMode: MacEDRReadbackStorageMode, requiresSynchronization: Bool) {
+        self.storageMode = storageMode
+        self.requiresSynchronization = requiresSynchronization
+    }
+}
+
+public enum MacEDRReadbackPolicy {
+    public static func make(hasUnifiedMemory: Bool) -> MacEDRReadbackResourcePolicy {
+        if hasUnifiedMemory {
+            return MacEDRReadbackResourcePolicy(
+                storageMode: .shared,
+                requiresSynchronization: false
+            )
+        }
+        return MacEDRReadbackResourcePolicy(
+            storageMode: .managed,
+            requiresSynchronization: true
+        )
+    }
+}
+
 public struct MacEDRReadbackResult: Equatable, Sendable {
     public var deviceName: String
+    public var hasUnifiedMemory: Bool
+    public var storageMode: MacEDRReadbackStorageMode
+    public var synchronizationPerformed: Bool
     public var pixelFormatName: String
     public var samples: [MacEDRReadbackSample]
 
-    public init(deviceName: String, pixelFormatName: String, samples: [MacEDRReadbackSample]) {
+    public init(
+        deviceName: String,
+        hasUnifiedMemory: Bool,
+        storageMode: MacEDRReadbackStorageMode,
+        synchronizationPerformed: Bool,
+        pixelFormatName: String,
+        samples: [MacEDRReadbackSample]
+    ) {
         self.deviceName = deviceName
+        self.hasUnifiedMemory = hasUnifiedMemory
+        self.storageMode = storageMode
+        self.synchronizationPerformed = synchronizationPerformed
         self.pixelFormatName = pixelFormatName
         self.samples = samples
+    }
+}
+
+public enum MacEDRRenderState: Equatable, Sendable {
+    case configured
+    case submitted
+    case completed
+    case failed(String)
+
+    public var diagnosticValue: String {
+        switch self {
+        case .configured:
+            return "configured"
+        case .submitted:
+            return "submitted"
+        case .completed:
+            return "completed"
+        case .failed:
+            return "failed"
+        }
+    }
+
+    public var failureDescription: String? {
+        guard case .failed(let detail) = self else {
+            return nil
+        }
+        return detail
+    }
+}
+
+public enum MacEDRCommandCompletionOutcome: Equatable, Sendable {
+    case completed
+    case failed(String?)
+}
+
+public enum MacEDRRenderStateReducer {
+    public static func reduce(_ outcome: MacEDRCommandCompletionOutcome) -> MacEDRRenderState {
+        switch outcome {
+        case .completed:
+            return .completed
+        case .failed(let detail):
+            let boundedDetail = detail?.trimmingCharacters(in: .whitespacesAndNewlines)
+            return .failed(
+                boundedDetail.flatMap { $0.isEmpty ? nil : $0 }
+                    ?? "Metal command buffer completed with an unknown failure."
+            )
+        }
     }
 }
 
@@ -202,7 +295,13 @@ private final class MacEDRMetalPipeline {
 
 public final class MacEDRMetalRenderer: NSObject, MTKViewDelegate {
     public let configuration: MacEDRTestPatternConfiguration
+    public private(set) var renderState: MacEDRRenderState = .configured
     public private(set) var lastErrorDescription: String?
+    public var onRenderStateChange: ((MacEDRRenderState) -> Void)? {
+        didSet {
+            onRenderStateChange?(renderState)
+        }
+    }
 
     private let pipeline: MacEDRMetalPipeline
 
@@ -250,15 +349,35 @@ public final class MacEDRMetalRenderer: NSObject, MTKViewDelegate {
         do {
             let commandBuffer = try pipeline.encode(renderPassDescriptor: renderPassDescriptor)
             commandBuffer.present(drawable)
+            publish(.submitted)
+            commandBuffer.addCompletedHandler { [weak self] completedBuffer in
+                let outcome: MacEDRCommandCompletionOutcome
+                if completedBuffer.status == .completed {
+                    outcome = .completed
+                } else {
+                    let detail = completedBuffer.error?.localizedDescription
+                        ?? "Metal command buffer ended with status \(completedBuffer.status.rawValue)."
+                    outcome = .failed(detail)
+                }
+                let state = MacEDRRenderStateReducer.reduce(outcome)
+                DispatchQueue.main.async { [weak self] in
+                    self?.publish(state)
+                }
+            }
             commandBuffer.commit()
-            lastErrorDescription = nil
         } catch {
-            lastErrorDescription = error.localizedDescription
+            publish(.failed(error.localizedDescription))
         }
     }
 
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         view.setNeedsDisplay(view.bounds)
+    }
+
+    private func publish(_ state: MacEDRRenderState) {
+        renderState = state
+        lastErrorDescription = state.failureDescription
+        onRenderStateChange?(state)
     }
 }
 
@@ -274,13 +393,14 @@ public enum MacEDRMetalReadbackValidator {
         let stripeWidth = 8
         let height = 4
         let width = stripeWidth * configuration.colorStops.count
+        let readbackPolicy = MacEDRReadbackPolicy.make(hasUnifiedMemory: device.hasUnifiedMemory)
         let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: .rgba16Float,
             width: width,
             height: height,
             mipmapped: false
         )
-        textureDescriptor.storageMode = .shared
+        textureDescriptor.storageMode = readbackPolicy.storageMode.metalStorageMode
         textureDescriptor.usage = [.renderTarget]
         guard let texture = device.makeTexture(descriptor: textureDescriptor) else {
             throw MacEDRMetalError.textureCreation
@@ -294,6 +414,17 @@ public enum MacEDRMetalReadbackValidator {
 
         let pipeline = try MacEDRMetalPipeline(device: device, configuration: configuration)
         let commandBuffer = try pipeline.encode(renderPassDescriptor: renderPassDescriptor)
+        let storageMode = try MacEDRReadbackStorageMode(textureStorageMode: texture.storageMode)
+        var synchronizationPerformed = false
+        if storageMode == .managed {
+            guard let blitEncoder = commandBuffer.makeBlitCommandEncoder() else {
+                throw MacEDRMetalError.synchronizationEncoding
+            }
+            blitEncoder.label = "Static EDR managed readback synchronization"
+            blitEncoder.synchronize(resource: texture)
+            blitEncoder.endEncoding()
+            synchronizationPerformed = true
+        }
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
 
@@ -322,8 +453,35 @@ public enum MacEDRMetalReadbackValidator {
 
         return MacEDRReadbackResult(
             deviceName: device.name,
+            hasUnifiedMemory: device.hasUnifiedMemory,
+            storageMode: storageMode,
+            synchronizationPerformed: synchronizationPerformed,
             pixelFormatName: configuration.pixelFormatName,
             samples: samples
         )
+    }
+}
+
+private extension MacEDRReadbackStorageMode {
+    var metalStorageMode: MTLStorageMode {
+        switch self {
+        case .shared:
+            return .shared
+        case .managed:
+            return .managed
+        }
+    }
+
+    init(textureStorageMode: MTLStorageMode) throws {
+        switch textureStorageMode {
+        case .shared:
+            self = .shared
+        case .managed:
+            self = .managed
+        default:
+            throw MacEDRMetalError.unsupportedConfiguration(
+                "CPU readback does not support texture storage mode \(textureStorageMode.rawValue)"
+            )
+        }
     }
 }

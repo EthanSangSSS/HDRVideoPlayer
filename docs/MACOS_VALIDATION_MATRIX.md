@@ -24,9 +24,9 @@
 | Dolby Vision Profile 8.1 system preview | `system_preview` | Local bounded run reached `ready`; readiness does not establish HDR10 fallback or Dolby Vision presentation | Keep presentation unknown |
 | Dolby Vision Profile 5/7 detection-only | `detect_only` | A structural Profile 5 fixture exposed `dvhe` and reached `ready`; dynamic metadata application and color presentation were not validated | Keep Profile 5/7 detect-only |
 | Unsupported system path | `system_preview` | A local unsupported-container video reached `failed` with no timeout | Preserve explicit failure reporting |
-| EDR display diagnostic | `detect_only` | Local run recorded maximum EDR component value `1.00`, so EDR did not appear available in that context | Validate the later static pattern on an EDR-capable display context |
-| Metal EDR test pattern | `experimental` | Separate executable configures `rgba16Float`, extended-linear-sRGB, and EDR opt-in; local GPU readback preserved all eight static bands through component `4.00`; the current non-EDR context rendered a nonblank window but exposed only `1.00` current/potential headroom | Record visible/clipping observations on an EDR-capable display; keep accuracy unverified |
-| VideoToolbox custom frame path | `not_started` | No decoder or frame renderer exists | Start only after the EDR-capable display result is reviewed |
+| EDR display diagnostic | `detect_only` | Local run recorded current and potential maximum EDR components of `1.00`; display support and current headroom were both false in that context | Run `chore/macos-edr-display-validation` where potential headroom is greater than `1.0` |
+| Metal EDR test pattern | `experimental` | Separate executable configures `rgba16Float`, extended-linear-sRGB, and EDR opt-in; local unified-memory GPU readback preserved all eight bands through `4.00`; managed synchronization policy and asynchronous completion reporting are implemented, but Intel/discrete hardware is not locally exercised | Record current/potential/reference values and visible/clipping observations on an EDR-capable display; keep accuracy unverified |
+| VideoToolbox custom frame path | `not_started` | No decoder or frame renderer exists | Start only after this fix and `chore/macos-edr-display-validation` are reviewed |
 
 ## Evidence rule
 
@@ -36,4 +36,4 @@ Use [MACOS_LOCAL_VALIDATION.md](MACOS_LOCAL_VALIDATION.md) for the repository-ex
 
 ## Sanitized local result
 
-The repository-external six-category run completed on 2026-07-26 with no timeouts. SDR, HDR10, HLG, Profile 8.1, and structural Profile 5 fixtures reached AVPlayer `ready`; the unsupported-container fixture reached `failed`. All fixtures were locally generated, authorized test patterns. The Profile 5 fixture was detect-only and was not treated as colorimetrically valid. Visible presentation was not observed, EDR did not appear available in the command-line display context, and the rendering claim remained unknown and unverified.
+The repository-external six-category run completed on 2026-07-26 with no timeouts. SDR, HDR10, HLG, Profile 8.1, and structural Profile 5 fixtures reached AVPlayer `ready`; the unsupported-container fixture reached `failed`. All fixtures were locally generated, authorized test patterns. The Profile 5 fixture was detect-only and was not treated as colorimetrically valid. Visible presentation was not observed. Current and potential maximum EDR components were both `1.00`, so neither display support nor current headroom had positive evidence in that context; the rendering claim remained unknown and unverified.

@@ -18,7 +18,7 @@ final class MacEDRTestPatternTests: XCTestCase {
     func testReportKeepsSubmittedPixelsDisplayFactsAndAccuracySeparate() {
         let display = MacDisplayDiagnostic(
             screenName: "Test display",
-            maximumEDRColorComponentValue: 1.5,
+            maximumCurrentEDRColorComponentValue: 1.5,
             maximumPotentialEDRColorComponentValue: 2.0,
             maximumReferenceEDRColorComponentValue: 1.25
         )
@@ -27,8 +27,11 @@ final class MacEDRTestPatternTests: XCTestCase {
 
         XCTAssertTrue(report.rendererFacts.contains("Maximum submitted component: 4.00"))
         XCTAssertTrue(report.rendererFacts.contains("Decoded video frames accepted: false"))
-        XCTAssertTrue(report.displayFacts.contains("Current maximum EDR color component value: 1.50"))
-        XCTAssertTrue(report.displayFacts.contains("Potential maximum EDR color component value: 2.00"))
+        XCTAssertTrue(report.displayFacts.contains("Display supports EDR: true"))
+        XCTAssertTrue(report.displayFacts.contains("Current EDR headroom available: true"))
+        XCTAssertTrue(report.displayFacts.contains("Current maximum EDR component: 1.50"))
+        XCTAssertTrue(report.displayFacts.contains("Potential maximum EDR component: 2.00"))
+        XCTAssertTrue(report.displayFacts.contains("Reference maximum EDR component: 1.25"))
         XCTAssertEqual(report.presentationClaim.path, .metalEDRTestPattern)
         XCTAssertEqual(report.presentationClaim.accuracy, .unverified)
         XCTAssertTrue(report.presentationClaim.limitation.contains("Unknown and unverified"))

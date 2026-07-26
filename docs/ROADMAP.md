@@ -77,7 +77,7 @@ Status: implemented in the scaffold and exercised by the local system-preview ma
 - Swift Package targeting macOS 13 or later.
 - AppKit shell and AVPlayerView system preview.
 - AVFoundation/CoreMedia metadata facts.
-- NSScreen EDR capability facts.
+- Separate NSScreen potential-support, current-headroom, and reference EDR facts.
 - Pure model and diagnostic tests.
 - No custom Metal renderer or VideoToolbox frame path.
 
@@ -90,14 +90,21 @@ Status: complete for the bounded local gate. The repository-external six-categor
 
 ### macOS Milestone 2 — Metal EDR test pattern
 
-Status: implemented as an isolated static-pixel path. FP16 drawable configuration and GPU readback are validated; visible EDR output remains unverified pending an EDR-capable display observation.
+Status: experimental. FP16 drawable configuration, unified-memory readback, managed-resource synchronization policy, and asynchronous command completion reporting are implemented. Intel/discrete hardware and visible EDR output remain unverified.
 
 - Render a static EDR test pattern.
 - Validate drawable format, EDR headroom, color-space assumptions, and measurement procedure.
 - Do not add decoded video frames.
 
+### macOS Milestone 2.1 — EDR display validation
+
+- Branch: `chore/macos-edr-display-validation`.
+- Require potential EDR headroom greater than `1.0`.
+- Record display support, current headroom, and current/potential/reference values separately.
+- Keep visible presentation accuracy unknown and unverified unless repeatable measurement supports a narrower claim.
+
 ### macOS Milestone 3 — Custom video-frame experiment
 
-- Gate: review the static-pattern result from an EDR-capable display first.
+- Gate: review this evidence/readback fix and the `chore/macos-edr-display-validation` result first.
 - Evaluate VideoToolbox, CVPixelBuffer, and Metal integration.
 - Keep audio, timing, color conversion, and presentation validation as explicit gates.

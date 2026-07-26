@@ -29,20 +29,44 @@ final class MacMetadataModelTests: XCTestCase {
         XCTAssertEqual(asset.presentationClaim.path, .unknown)
     }
 
-    func testEDRModelRepresentsUnavailableAndAvailableValues() {
-        let unavailable = MacDisplayDiagnostic.unavailable
-        let available = MacDisplayDiagnostic(
+    func testEDRCapableDisplayCanHaveNoCurrentHeadroom() {
+        let display = diagnostic(current: 1.0, potential: 4.0)
+
+        XCTAssertTrue(display.supportsEDR)
+        XCTAssertFalse(display.hasCurrentEDRHeadroom)
+    }
+
+    func testEDRCapableDisplayCanHaveCurrentHeadroom() {
+        let display = diagnostic(current: 2.0, potential: 4.0)
+
+        XCTAssertTrue(display.supportsEDR)
+        XCTAssertTrue(display.hasCurrentEDRHeadroom)
+    }
+
+    func testSDRDisplayHasNeitherCapabilityNorCurrentHeadroom() {
+        let display = diagnostic(current: 1.0, potential: 1.0)
+
+        XCTAssertFalse(display.supportsEDR)
+        XCTAssertFalse(display.hasCurrentEDRHeadroom)
+    }
+
+    func testUnknownEDRValuesProduceNoPositiveInference() {
+        let display = MacDisplayDiagnostic.unavailable
+
+        XCTAssertNil(display.maximumCurrentEDRColorComponentValue)
+        XCTAssertNil(display.maximumPotentialEDRColorComponentValue)
+        XCTAssertNil(display.maximumReferenceEDRColorComponentValue)
+        XCTAssertFalse(display.supportsEDR)
+        XCTAssertFalse(display.hasCurrentEDRHeadroom)
+        XCTAssertTrue(display.limitation.contains("Missing values produce no positive inference"))
+    }
+
+    private func diagnostic(current: Double, potential: Double) -> MacDisplayDiagnostic {
+        MacDisplayDiagnostic(
             screenName: "Test display",
-            maximumEDRColorComponentValue: 1.6,
-            maximumPotentialEDRColorComponentValue: 2.0,
+            maximumCurrentEDRColorComponentValue: current,
+            maximumPotentialEDRColorComponentValue: potential,
             maximumReferenceEDRColorComponentValue: 1.4
         )
-
-        XCTAssertNil(unavailable.maximumEDRColorComponentValue)
-        XCTAssertFalse(unavailable.isEDRAvailable)
-        XCTAssertEqual(available.maximumEDRColorComponentValue, 1.6)
-        XCTAssertEqual(available.maximumPotentialEDRColorComponentValue, 2.0)
-        XCTAssertEqual(available.maximumReferenceEDRColorComponentValue, 1.4)
-        XCTAssertTrue(available.isEDRAvailable)
     }
 }

@@ -5,7 +5,7 @@ This procedure records the macOS system-preview matrix with locally authorized f
 1. AVFoundation and CoreMedia metadata facts;
 2. inferred filename or extension facts;
 3. AVPlayer item state (`ready`, `failed`, or `timed_out`);
-4. NSScreen display and EDR capability facts;
+4. NSScreen potential display support, current headroom, and current/potential/reference EDR facts;
 5. presentation accuracy, which remains unknown and unverified.
 
 It does not validate a custom renderer, HDR output accuracy, Dolby Vision output accuracy, certification, codec licensing, or DRM behavior.
@@ -30,8 +30,8 @@ The Profile 8.1 case is fallback-oriented only. Profile 5 and Profile 7 remain d
 From the repository root, run the package checks:
 
 ```bash
-swift build --package-path macos/HDRVideoPlayerMac
-swift test --package-path macos/HDRVideoPlayerMac
+swift build --package-path macos/HDRVideoPlayerMac -Xswiftc -warnings-as-errors
+swift test --package-path macos/HDRVideoPlayerMac -Xswiftc -warnings-as-errors
 ```
 
 Generate the local record. The default output is ignored under `artifacts/macos-local-validation/`.
@@ -48,7 +48,7 @@ The validator:
 - records only file basenames and SHA-256 values, never absolute media paths;
 - reuses `MacMetadataProbe` for AVFoundation/CoreMedia facts;
 - waits up to 15 seconds for AVPlayer `ready` or `failed` per fixture;
-- records the current NSScreen name and maximum EDR component value;
+- records the current NSScreen name, support/headroom booleans, and current/potential/reference EDR component values;
 - leaves visible presentation observation as `not_observed`;
 - preserves the exact presentation claim: `Unknown and unverified. No custom Metal HDR or Dolby Vision rendering accuracy claim.`
 
@@ -73,4 +73,4 @@ This milestone is ready for review only when:
 - the presentation claim remains unknown and unverified;
 - `git status --short` shows no media, local manifest, or generated report.
 
-Only a sanitized summary may be added to the repository. Keep fixture names, hashes, paths, and the full local report private. The next `feat/macos-edr-test-pattern` branch remains blocked until this local matrix is reviewed; that later branch may render only a static Metal EDR pattern and must not accept decoded video frames.
+Only a sanitized summary may be added to the repository. Keep fixture names, hashes, paths, and the full local report private. The static pattern is now implemented, but the next gate is `chore/macos-edr-display-validation`; it must use an authorized display context with potential EDR headroom above `1.0` and keep current/potential/reference values separate. Decoded video frames remain blocked.

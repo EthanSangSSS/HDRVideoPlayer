@@ -16,7 +16,7 @@ This repository intentionally starts with:
 
 It does **not** yet claim correct HDR10, HLG, or Dolby Vision playback.
 
-The macOS scaffold is a separate early track. Its Metal executable renders fixed FP16 test pixels only; it does not add a VideoToolbox frame path or prove HDR or Dolby Vision video presentation accuracy.
+The macOS scaffold is a separate early track. Its Metal executable renders fixed FP16 test pixels only. Display support comes from potential EDR capability, while current headroom remains a separate fact. GPU completion and readback do not add a VideoToolbox frame path or prove HDR or Dolby Vision video presentation accuracy.
 
 ## Why this exists
 
@@ -63,8 +63,9 @@ The macOS scaffold lives under `macos/HDRVideoPlayerMac` as a Swift Package targ
 - AppKit executable shell and local file picker;
 - AVKit / AVPlayer system-media preview;
 - AVFoundation / CoreMedia metadata diagnostics;
-- NSScreen EDR capability facts;
-- isolated `rgba16Float` Metal EDR static test pattern and GPU readback checks;
+- separate NSScreen EDR support, current headroom, potential, and reference facts;
+- isolated `rgba16Float` Metal EDR static test pattern with unified/managed GPU readback checks;
+- asynchronous interactive command-buffer completion and failure state;
 - Swift-native core models and pure model tests.
 
 AVPlayer readiness is only a system-path state. Static Metal values above `1.0` prove only submitted pixels. Presentation remains unknown and unverified, and no HDR or Dolby Vision video rendering accuracy is claimed.
@@ -106,8 +107,9 @@ dotnet test .\tests\HDRVideoPlayer.Core.Tests\HDRVideoPlayer.Core.Tests.csproj -
 macOS 13 or later with Xcode command-line tools:
 
 ```bash
-swift build --package-path macos/HDRVideoPlayerMac
-swift test --package-path macos/HDRVideoPlayerMac
+swift build --package-path macos/HDRVideoPlayerMac -Xswiftc -warnings-as-errors
+swift test --package-path macos/HDRVideoPlayerMac -Xswiftc -warnings-as-errors
+swift build --package-path macos/HDRVideoPlayerMac --configuration release -Xswiftc -warnings-as-errors
 swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMac
 swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacEDRPattern
 # Requires a repository-external manifest with authorized local media:

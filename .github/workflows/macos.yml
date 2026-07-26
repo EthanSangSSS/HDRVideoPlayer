@@ -15,9 +15,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build macOS package
-        run: swift build --package-path macos/HDRVideoPlayerMac
+        run: |
+          swift build \
+            --package-path macos/HDRVideoPlayerMac \
+            -Xswiftc -warnings-as-errors
       - name: Test macOS core
-        run: swift test --package-path macos/HDRVideoPlayerMac
+        run: |
+          swift test \
+            --package-path macos/HDRVideoPlayerMac \
+            -Xswiftc -warnings-as-errors
+      - name: Build macOS package for release
+        run: |
+          swift build \
+            --package-path macos/HDRVideoPlayerMac \
+            --configuration release \
+            -Xswiftc -warnings-as-errors
+      - name: Verify no external Swift dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          dependencies="$(swift package --package-path macos/HDRVideoPlayerMac show-dependencies)"
+          printf '%s\n' "$dependencies"
+          if [[ "$dependencies" != "No external dependencies found" ]]; then
+            echo "External Swift package dependencies are not allowed."
+            exit 1
+          fi
       - name: Public boundary scan
         shell: bash
         run: |
@@ -29,6 +51,18 @@ jobs:
           if [[ -n "$media_files" ]]; then
             echo "Committed media files are not allowed:"
             echo "$media_files"
+            exit 1
+          fi
+
+          binary_files="$(find . -type f \
+            \( -iname '*.dll' -o -iname '*.dylib' -o -iname '*.so' -o -iname '*.a' \) \
+            -not -path './.git/*' -not -path '*/.build/*' -print)"
+          binary_bundles="$(find . -type d \
+            \( -iname '*.framework' -o -iname '*.xcframework' \) \
+            -not -path './.git/*' -not -path '*/.build/*' -print)"
+          if [[ -n "$binary_files" || -n "$binary_bundles" ]]; then
+            echo "Committed binary dependencies are not allowed:"
+            printf '%s\n%s\n' "$binary_files" "$binary_bundles"
             exit 1
           fi
 
