@@ -1,0 +1,38 @@
+[
+  {
+    "id": "sdr-h264-mp4",
+    "category": "sdr_h264_mp4",
+    "path": "/Users/you/Movies/licensed-media/sdr-h264.mp4",
+    "notes": "Replace with an authorized local SDR H.264 MP4 outside this repository."
+  },
+  {
+    "id": "hdr10-hevc-main10",
+    "category": "hdr10_hevc_main10",
+    "path": "/Users/you/Movies/licensed-media/hdr10-main10.mp4",
+    "notes": "Use an authorized MP4 or MOV with independently verified HEVC Main10 HDR10 metadata."
+  },
+  {
+    "id": "hlg",
+    "category": "hlg",
+    "path": "/Users/you/Movies/licensed-media/hlg.mp4",
+    "notes": "Use an authorized local HLG source."
+  },
+  {
+    "id": "dolby-vision-profile-8-1",
+    "category": "dolby_vision_profile_8_1_fallback",
+    "path": "/Users/you/Movies/licensed-media/dv-profile-8.1.mp4",
+    "notes": "Fallback-oriented record only. Do not infer Dolby Vision rendering from an open result."
+  },
+  {
+    "id": "dolby-vision-profile-5-or-7",
+    "category": "dolby_vision_profile_5_or_7_detect_only",
+    "path": "/Users/you/Movies/licensed-media/dv-profile-5-or-7.mp4",
+    "notes": "Detection-only case. Record any system result without claiming presentation correctness."
+  },
+  {
+    "id": "unsupported-or-missing-codec",
+    "category": "unsupported_or_missing_codec",
+    "path": "/Users/you/Movies/licensed-media/unsupported-or-missing-codec.mkv",
+    "notes": "Use an authorized local video expected to exercise an unsupported container or codec path."
+  }
+]

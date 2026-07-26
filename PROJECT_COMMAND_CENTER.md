@@ -23,6 +23,7 @@ This is not a certified Dolby Vision product. It does not bypass DRM. It does no
 - `docs/MACOS_FEASIBILITY.md`
 - `docs/MACOS_ARCHITECTURE.md`
 - `docs/MACOS_VALIDATION_MATRIX.md`
+- `docs/MACOS_LOCAL_VALIDATION.md`
 - `docs/ROADMAP.md`
 - `docs/HDRIMAGEVIEWER_INFLUENCE.md`
 - `AGENTS.md`
@@ -64,12 +65,13 @@ Current scope:
 
 Next macOS PR:
 
-`chore/macos-local-validation`
+`feat/macos-edr-test-pattern`
 
-Use locally authorized, uncommitted fixtures to record metadata facts, AVPlayer `ready`/`failed` state, EDR/display observation, and presentation limitations separately. Do not start the Metal EDR test-pattern milestone until this record is reviewed.
+The repository-external six-category system-preview record completed without timeouts, and the sanitized result is in `docs/MACOS_VALIDATION_MATRIX.md`. The next milestone may add a static Metal EDR test pattern only. It must not accept decoded video frames, add VideoToolbox, or promote HDR or Dolby Vision presentation claims.
 
 macOS validation:
 
 - `swift build --package-path macos/HDRVideoPlayerMac`
 - `swift test --package-path macos/HDRVideoPlayerMac`
+- `swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacLocalValidation --manifest /absolute/path/outside-the-repo.json`
 - `git diff --check`

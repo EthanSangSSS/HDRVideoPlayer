@@ -31,8 +31,9 @@ public enum MacDisplayDiagnostics {
             return .unavailable
         }
 
+        let screenName = screen.localizedName.trimmingCharacters(in: .whitespacesAndNewlines)
         return MacDisplayDiagnostic(
-            screenName: screen.localizedName,
+            screenName: screenName.isEmpty ? nil : screenName,
             maximumEDRColorComponentValue: Double(screen.maximumExtendedDynamicRangeColorComponentValue)
         )
     }

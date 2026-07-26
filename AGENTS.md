@@ -16,6 +16,7 @@ Build HDRVideoPlayer into a Windows-first HDR / Dolby Vision local video player 
 - Keep macOS metadata facts, AVPlayer state, NSScreen EDR facts, and presentation claims separate.
 - AVPlayer readiness does not prove HDR or Dolby Vision presentation accuracy.
 - Do not add a macOS Metal renderer or VideoToolbox custom frame path before the local system-preview matrix is reviewed.
+- Keep every macOS fixture, local manifest, generated report, basename, and hash out of Git; commit only a sanitized matrix summary.
 
 ## Current repo state
 
@@ -74,5 +75,6 @@ macOS:
 ```bash
 swift build --package-path macos/HDRVideoPlayerMac
 swift test --package-path macos/HDRVideoPlayerMac
+swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacLocalValidation --manifest /absolute/path/outside-the-repo.json
 git diff --check
 ```
