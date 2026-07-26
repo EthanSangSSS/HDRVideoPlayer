@@ -4,7 +4,7 @@ Windows-first HDR / Dolby Vision local video player lab with an experimental par
 
 ## Status
 
-Validated Windows scaffold + Media Foundation metadata diagnostics + experimental Windows system-media preview. The experimental macOS Swift Package adds AVFoundation diagnostics, AVPlayer system preview, NSScreen EDR facts, and a completed bounded local system-open matrix without claiming platform parity or presentation accuracy.
+Validated Windows scaffold + Media Foundation metadata diagnostics + experimental Windows system-media preview. The experimental macOS Swift Package adds AVFoundation diagnostics, AVPlayer system preview, NSScreen EDR facts, a completed bounded local system-open matrix, and an isolated static Metal EDR test pattern without claiming platform parity or presentation accuracy.
 
 This repository intentionally starts with:
 - a WinUI 3 shell;
@@ -16,7 +16,7 @@ This repository intentionally starts with:
 
 It does **not** yet claim correct HDR10, HLG, or Dolby Vision playback.
 
-The macOS scaffold is a separate early track. The local matrix records system open states only; it does not add a custom Metal renderer, a VideoToolbox frame path, or proof of HDR or Dolby Vision presentation accuracy.
+The macOS scaffold is a separate early track. Its Metal executable renders fixed FP16 test pixels only; it does not add a VideoToolbox frame path or prove HDR or Dolby Vision video presentation accuracy.
 
 ## Why this exists
 
@@ -64,9 +64,10 @@ The macOS scaffold lives under `macos/HDRVideoPlayerMac` as a Swift Package targ
 - AVKit / AVPlayer system-media preview;
 - AVFoundation / CoreMedia metadata diagnostics;
 - NSScreen EDR capability facts;
+- isolated `rgba16Float` Metal EDR static test pattern and GPU readback checks;
 - Swift-native core models and pure model tests.
 
-AVPlayer readiness is only a system-path state. Presentation remains unknown and unverified, and no custom Metal HDR or Dolby Vision rendering accuracy is claimed.
+AVPlayer readiness is only a system-path state. Static Metal values above `1.0` prove only submitted pixels. Presentation remains unknown and unverified, and no HDR or Dolby Vision video rendering accuracy is claimed.
 
 ## Current scaffold capabilities
 
@@ -108,6 +109,7 @@ macOS 13 or later with Xcode command-line tools:
 swift build --package-path macos/HDRVideoPlayerMac
 swift test --package-path macos/HDRVideoPlayerMac
 swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMac
+swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacEDRPattern
 # Requires a repository-external manifest with authorized local media:
 swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacLocalValidation \
   --manifest /absolute/path/macos-local-validation-fixtures.json
@@ -133,5 +135,6 @@ If this is not yet in GitHub:
 - `docs/MACOS_ARCHITECTURE.md`
 - `docs/MACOS_VALIDATION_MATRIX.md`
 - `docs/MACOS_LOCAL_VALIDATION.md`
+- `docs/MACOS_EDR_TEST_PATTERN.md`
 - `docs/ROADMAP.md`
 - `AGENTS.md`

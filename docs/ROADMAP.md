@@ -90,7 +90,7 @@ Status: complete for the bounded local gate. The repository-external six-categor
 
 ### macOS Milestone 2 — Metal EDR test pattern
 
-Status: next. The local system-preview matrix is complete and reviewed.
+Status: implemented as an isolated static-pixel path. FP16 drawable configuration and GPU readback are validated; visible EDR output remains unverified pending an EDR-capable display observation.
 
 - Render a static EDR test pattern.
 - Validate drawable format, EDR headroom, color-space assumptions, and measurement procedure.
@@ -98,5 +98,6 @@ Status: next. The local system-preview matrix is complete and reviewed.
 
 ### macOS Milestone 3 — Custom video-frame experiment
 
+- Gate: review the static-pattern result from an EDR-capable display first.
 - Evaluate VideoToolbox, CVPixelBuffer, and Metal integration.
 - Keep audio, timing, color conversion, and presentation validation as explicit gates.

@@ -19,6 +19,10 @@ let package = Package(
         .executable(
             name: "HDRVideoPlayerMacLocalValidation",
             targets: ["HDRVideoPlayerMacLocalValidation"]
+        ),
+        .executable(
+            name: "HDRVideoPlayerMacEDRPattern",
+            targets: ["HDRVideoPlayerMacEDRPattern"]
         )
     ],
     targets: [
@@ -33,9 +37,21 @@ let package = Package(
             name: "HDRVideoPlayerMacLocalValidation",
             dependencies: ["HDRVideoPlayerMacCore"]
         ),
+        .target(
+            name: "HDRVideoPlayerMacMetal",
+            dependencies: ["HDRVideoPlayerMacCore"]
+        ),
+        .executableTarget(
+            name: "HDRVideoPlayerMacEDRPattern",
+            dependencies: ["HDRVideoPlayerMacCore", "HDRVideoPlayerMacMetal"]
+        ),
         .testTarget(
             name: "HDRVideoPlayerMacCoreTests",
             dependencies: ["HDRVideoPlayerMacCore"]
+        ),
+        .testTarget(
+            name: "HDRVideoPlayerMacMetalTests",
+            dependencies: ["HDRVideoPlayerMacCore", "HDRVideoPlayerMacMetal"]
         )
     ]
 )

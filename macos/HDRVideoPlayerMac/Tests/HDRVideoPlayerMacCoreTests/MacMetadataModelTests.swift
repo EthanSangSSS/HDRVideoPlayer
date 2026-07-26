@@ -33,12 +33,16 @@ final class MacMetadataModelTests: XCTestCase {
         let unavailable = MacDisplayDiagnostic.unavailable
         let available = MacDisplayDiagnostic(
             screenName: "Test display",
-            maximumEDRColorComponentValue: 1.6
+            maximumEDRColorComponentValue: 1.6,
+            maximumPotentialEDRColorComponentValue: 2.0,
+            maximumReferenceEDRColorComponentValue: 1.4
         )
 
         XCTAssertNil(unavailable.maximumEDRColorComponentValue)
         XCTAssertFalse(unavailable.isEDRAvailable)
         XCTAssertEqual(available.maximumEDRColorComponentValue, 1.6)
+        XCTAssertEqual(available.maximumPotentialEDRColorComponentValue, 2.0)
+        XCTAssertEqual(available.maximumReferenceEDRColorComponentValue, 1.4)
         XCTAssertTrue(available.isEDRAvailable)
     }
 }

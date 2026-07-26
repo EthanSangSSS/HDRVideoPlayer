@@ -6,7 +6,7 @@ Public portfolio project for a Windows-first HDR / Dolby Vision local player and
 
 ## Current phase
 
-Validated Windows scaffold with Media Foundation metadata diagnostics and an experimental Windows system-media preview. The parallel macOS scaffold uses AVFoundation, AVKit, AppKit, and NSScreen diagnostics.
+Validated Windows scaffold with Media Foundation metadata diagnostics and an experimental Windows system-media preview. The parallel macOS track uses AVFoundation, AVKit, AppKit, NSScreen diagnostics, and an isolated static Metal EDR test pattern.
 
 ## Product boundary
 
@@ -61,17 +61,23 @@ Current scope:
 - AppKit + AVPlayerView system-media preview.
 - AVFoundation/CoreMedia metadata facts.
 - NSScreen EDR capability facts.
+- Static `rgba16Float` Metal EDR test pixels with GPU readback validation.
 - Unknown and unverified presentation claim.
 
-Next macOS PR:
+Current macOS PR:
 
 `feat/macos-edr-test-pattern`
 
-The repository-external six-category system-preview record completed without timeouts, and the sanitized result is in `docs/MACOS_VALIDATION_MATRIX.md`. The next milestone may add a static Metal EDR test pattern only. It must not accept decoded video frames, add VideoToolbox, or promote HDR or Dolby Vision presentation claims.
+The repository-external six-category system-preview record completed without timeouts, and the sanitized result is in `docs/MACOS_VALIDATION_MATRIX.md`. This milestone adds a static Metal EDR test pattern only. It does not accept decoded video frames, add VideoToolbox, or promote HDR or Dolby Vision presentation claims.
+
+Next macOS gate:
+
+Validate the static pattern on an EDR-capable display using `docs/MACOS_EDR_TEST_PATTERN.md`. Do not begin a VideoToolbox/CVPixelBuffer frame path until that observation is reviewed.
 
 macOS validation:
 
 - `swift build --package-path macos/HDRVideoPlayerMac`
 - `swift test --package-path macos/HDRVideoPlayerMac`
+- `swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacEDRPattern`
 - `swift run --package-path macos/HDRVideoPlayerMac HDRVideoPlayerMacLocalValidation --manifest /absolute/path/outside-the-repo.json`
 - `git diff --check`
